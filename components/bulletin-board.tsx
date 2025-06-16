@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from "react"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Bell, Users, MessageSquare, Heart, Pin, X, Send } from "lucide-react"
+import { ArrowLeft, Users, MessageSquare, Heart, Pin, X, Send } from "lucide-react"
 import { FadeIn } from "@/components/ui/fade-in"
 
 interface BulletinBoardProps {
@@ -32,6 +32,94 @@ export const BulletinBoard = React.memo<BulletinBoardProps>(({ user, onNavigate 
     { id: "tip", name: "Writing Tips", icon: "✍️", desc: "Help others write better letters" },
     { id: "gratitude", name: "Gratitude", icon: "🙏", desc: "Thank someone or express appreciation" },
     { id: "question", name: "Question", icon: "❓", desc: "Ask the community for advice" },
+  ]
+
+  // Mock data for friends' posts
+  const friendsPosts = [
+    {
+      author: "Sarah Johnson",
+      initials: "SJ",
+      time: "3 hours ago",
+      content:
+        "Just finished writing a 5-page letter to my grandmother! There's something so therapeutic about putting pen to paper and sharing memories. She's going to love hearing about my recent trip to Paris.",
+      likes: 12,
+      comments: 3,
+      isFriend: true,
+    },
+    {
+      author: "Mike Chen",
+      initials: "MC",
+      time: "6 hours ago",
+      content:
+        "My daughter received her first handwritten letter today from her pen pal in Japan. The excitement on her face was priceless! HeartPost is helping create these beautiful cross-cultural connections.",
+      likes: 8,
+      comments: 2,
+      isFriend: true,
+    },
+    {
+      author: "Emma Wilson",
+      initials: "EW",
+      time: "1 day ago",
+      content:
+        "Tip: I've started using different colored inks for different emotions in my letters. Blue for calm thoughts, green for hope, red for excitement. It adds such a personal touch!",
+      likes: 15,
+      comments: 5,
+      isFriend: true,
+    },
+    {
+      author: "David Brown",
+      initials: "DB",
+      time: "2 days ago",
+      content:
+        "Finally sent that letter I've been working on for weeks to my old college roommate. Sometimes the hardest part is just starting. But once you begin, the words just flow naturally.",
+      likes: 6,
+      comments: 1,
+      isFriend: true,
+    },
+  ]
+
+  // Mock data for community posts
+  const communityPosts = [
+    {
+      author: "Mai Anh",
+      initials: "MA",
+      time: "2 hours ago",
+      content:
+        "Thank you HeartPost for helping me reconnect with my childhood friend after 15 years! The joy of receiving a handwritten letter brought tears to my eyes. There's something magical about seeing someone's handwriting again.",
+      likes: 24,
+      comments: 5,
+      isFriend: false,
+    },
+    {
+      author: "Tuan Minh",
+      initials: "TM",
+      time: "5 hours ago",
+      content:
+        "My 8-year-old daughter received her first letter from her grandmother today. Watching her carefully read each word and then run to call grandma was priceless. HeartPost is creating beautiful memories across generations!",
+      likes: 18,
+      comments: 3,
+      isFriend: false,
+    },
+    {
+      author: "Linh Chi",
+      initials: "LC",
+      time: "1 day ago",
+      content:
+        "I love the new envelope designs! Could we get more vintage patterns and maybe some traditional motifs? It would be wonderful to have options that reflect our cultural heritage.",
+      likes: 31,
+      comments: 8,
+      isFriend: false,
+    },
+    {
+      author: "An Nguyen",
+      initials: "AN",
+      time: "2 days ago",
+      content:
+        "Started a letter-writing club at my local library. We meet every Saturday to write letters together and share stories. It's amazing how this simple act brings people together!",
+      likes: 22,
+      comments: 6,
+      isFriend: false,
+    },
   ]
 
   return (
@@ -66,7 +154,7 @@ export const BulletinBoard = React.memo<BulletinBoardProps>(({ user, onNavigate 
                 }`}
               >
                 <Users className="w-4 h-4 inline mr-2" />
-                <span className="hidden sm:inline">My Friends</span>
+                <span className="hidden sm:inline">Friends' Posts</span>
                 <span className="sm:hidden">Friends</span>
               </button>
               <button
@@ -89,78 +177,47 @@ export const BulletinBoard = React.memo<BulletinBoardProps>(({ user, onNavigate 
         <FadeIn delay={600}>
           <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl p-6 sm:p-8 min-h-96 border border-amber-200/50">
             {activeTab === "friends" && (
-              <div className="space-y-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl sm:text-2xl font-serif text-amber-800">My Friends</h2>
-                  <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                    <Users className="w-4 h-4 mr-2" />
-                    Add Friend
-                  </Button>
+              <div>
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                  <h2 className="text-xl sm:text-2xl font-serif text-amber-800">Friends' Posts</h2>
+                  <div className="text-sm text-amber-600 font-serif italic">
+                    See what your friends are sharing about their letter-writing journey
+                  </div>
                 </div>
 
-                {/* Friends List */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {[
-                    {
-                      name: "Sarah Johnson",
-                      avatar: "S",
-                      color: "bg-blue-500",
-                      status: "online",
-                      lastLetter: "2 days ago",
-                      mutualFriends: 5,
-                    },
-                    {
-                      name: "Mike Chen",
-                      avatar: "M",
-                      color: "bg-green-500",
-                      status: "offline",
-                      lastLetter: "1 week ago",
-                      mutualFriends: 3,
-                    },
-                    {
-                      name: "Emma Wilson",
-                      avatar: "E",
-                      color: "bg-purple-500",
-                      status: "online",
-                      lastLetter: "Yesterday",
-                      mutualFriends: 8,
-                    },
-                    {
-                      name: "David Brown",
-                      avatar: "D",
-                      color: "bg-orange-500",
-                      status: "offline",
-                      lastLetter: "3 days ago",
-                      mutualFriends: 2,
-                    },
-                  ].map((friend, index) => (
-                    <FadeIn key={friend.name} delay={700 + index * 100}>
-                      <div className="bg-amber-50 p-4 rounded-lg border border-amber-200 hover:shadow-md transition-all duration-300 group">
-                        <div className="flex items-center space-x-4">
-                          <div className="relative">
-                            <div
-                              className={`w-12 h-12 ${friend.color} rounded-full flex items-center justify-center shadow-md group-hover:scale-110 transition-transform`}
-                            >
-                              <span className="font-serif font-bold text-white">{friend.avatar}</span>
+                <div className="space-y-6">
+                  {friendsPosts.map((post, index) => (
+                    <FadeIn key={`${post.author}-${index}`} delay={700 + index * 100}>
+                      <div className="bg-blue-50 p-4 sm:p-6 rounded-lg border border-blue-200 hover:shadow-md transition-all duration-300 group">
+                        <div className="flex items-start mb-4">
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-400 to-blue-500 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0 shadow-md relative">
+                            <span className="font-serif font-bold text-white text-sm sm:text-base">
+                              {post.initials}
+                            </span>
+                            {/* Friend indicator */}
+                            <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
+                              <Heart className="w-2 h-2 text-white" />
                             </div>
-                            <div
-                              className={`absolute -bottom-1 -right-1 w-4 h-4 ${friend.status === "online" ? "bg-green-500" : "bg-gray-400"} rounded-full border-2 border-white`}
-                            ></div>
                           </div>
-
-                          <div className="flex-1">
-                            <h4 className="font-serif text-amber-800 font-bold">{friend.name}</h4>
-                            <p className="text-xs text-amber-600">Last letter: {friend.lastLetter}</p>
-                            <p className="text-xs text-amber-500">{friend.mutualFriends} mutual friends</p>
-                          </div>
-
-                          <div className="flex flex-col space-y-2">
-                            <Button className="bg-amber-600 hover:bg-amber-700 text-white text-xs px-3 py-1">
-                              Write Letter
-                            </Button>
-                            <Button variant="ghost" className="text-amber-600 hover:bg-amber-100 text-xs px-3 py-1">
-                              View Profile
-                            </Button>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2 gap-1">
+                              <h4 className="font-serif font-bold text-blue-800">{post.author}</h4>
+                              <span className="text-sm text-blue-600">{post.time}</span>
+                            </div>
+                            <p className="text-blue-700 font-serif mb-4 text-sm sm:text-base">{post.content}</p>
+                            <div className="flex items-center space-x-4 sm:space-x-6 text-sm">
+                              <button className="flex items-center text-blue-600 hover:text-blue-800 transition-colors group-hover:scale-105">
+                                <Heart className="w-4 h-4 mr-1" />
+                                {post.likes} likes
+                              </button>
+                              <button className="flex items-center text-blue-600 hover:text-blue-800 transition-colors group-hover:scale-105">
+                                <MessageSquare className="w-4 h-4 mr-1" />
+                                {post.comments} comments
+                              </button>
+                              <button className="text-blue-600 hover:text-blue-800 transition-colors text-sm font-serif">
+                                Write to {post.author.split(" ")[0]}
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -168,42 +225,16 @@ export const BulletinBoard = React.memo<BulletinBoardProps>(({ user, onNavigate 
                   ))}
                 </div>
 
-                {/* Friend Requests */}
-                <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                  <h3 className="font-serif text-blue-800 font-bold mb-3 flex items-center">
-                    <Bell className="w-4 h-4 mr-2" />
-                    Friend Requests (2)
-                  </h3>
-                  <div className="space-y-3">
-                    {[
-                      { name: "Anna Lee", avatar: "A", mutualFriends: 4 },
-                      { name: "Tom Wilson", avatar: "T", mutualFriends: 1 },
-                    ].map((request, index) => (
-                      <div
-                        key={index}
-                        className="bg-white p-3 rounded border border-blue-200 flex items-center justify-between"
-                      >
-                        <div className="flex items-center space-x-3">
-                          <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                            <span className="font-serif font-bold text-white text-sm">{request.avatar}</span>
-                          </div>
-                          <div>
-                            <p className="font-serif text-blue-800 font-bold text-sm">{request.name}</p>
-                            <p className="text-xs text-blue-600">{request.mutualFriends} mutual friends</p>
-                          </div>
-                        </div>
-                        <div className="flex space-x-2">
-                          <Button className="bg-green-600 hover:bg-green-700 text-white text-xs px-2 py-1">
-                            Accept
-                          </Button>
-                          <Button className="bg-gray-600 hover:bg-gray-700 text-white text-xs px-2 py-1">
-                            Decline
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
+                {/* Empty state if no friends */}
+                {friendsPosts.length === 0 && (
+                  <div className="text-center py-12">
+                    <Users className="w-16 h-16 text-amber-400 mx-auto mb-4 opacity-50" />
+                    <h3 className="text-lg font-serif text-amber-700 mb-2">No posts from friends yet</h3>
+                    <p className="text-amber-600 font-serif italic">
+                      Add friends to see their letter-writing stories and experiences here
+                    </p>
                   </div>
-                </div>
+                )}
               </div>
             )}
 
@@ -221,37 +252,8 @@ export const BulletinBoard = React.memo<BulletinBoardProps>(({ user, onNavigate 
                 </div>
 
                 <div className="space-y-6">
-                  {/* Enhanced Community Posts */}
-                  {[
-                    {
-                      author: "Mai Anh",
-                      initials: "MA",
-                      time: "2 hours ago",
-                      content:
-                        "Thank you HeartPost for helping me reconnect with my childhood friend after 15 years! The joy of receiving a handwritten letter brought tears to my eyes. There's something magical about seeing someone's handwriting again.",
-                      likes: 24,
-                      comments: 5,
-                    },
-                    {
-                      author: "Tuan Minh",
-                      initials: "TM",
-                      time: "5 hours ago",
-                      content:
-                        "My 8-year-old daughter received her first letter from her grandmother today. Watching her carefully read each word and then run to call grandma was priceless. HeartPost is creating beautiful memories across generations!",
-                      likes: 18,
-                      comments: 3,
-                    },
-                    {
-                      author: "Linh Chi",
-                      initials: "LC",
-                      time: "1 day ago",
-                      content:
-                        "I love the new envelope designs! Could we get more vintage patterns and maybe some traditional motifs? It would be wonderful to have options that reflect our cultural heritage.",
-                      likes: 31,
-                      comments: 8,
-                    },
-                  ].map((post, index) => (
-                    <FadeIn key={post.author} delay={700 + index * 100}>
+                  {communityPosts.map((post, index) => (
+                    <FadeIn key={`${post.author}-${index}`} delay={700 + index * 100}>
                       <div className="bg-amber-50 p-4 sm:p-6 rounded-lg border border-amber-200 hover:shadow-md transition-all duration-300 group">
                         <div className="flex items-start mb-4">
                           <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-amber-400 to-amber-500 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0 shadow-md">

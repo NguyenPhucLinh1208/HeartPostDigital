@@ -16,6 +16,7 @@ export const MainHall = React.memo<MainHallProps>(({ user, onNavigate, onLogout 
   const [currentTime, setCurrentTime] = useState(new Date())
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [hoveredNavItem, setHoveredNavItem] = useState<string | null>(null)
+  const [showNotifications, setShowNotifications] = useState(false)
   const { animate } = useAnimation()
 
   // Optimized time update
@@ -78,6 +79,33 @@ export const MainHall = React.memo<MainHallProps>(({ user, onNavigate, onLogout 
     [],
   )
 
+  const notifications = [
+    {
+      id: 1,
+      title: "System Maintenance",
+      message: "Scheduled maintenance on Dec 16, 2024 from 2:00 AM to 4:00 AM",
+      time: "2 hours ago",
+      type: "system",
+      read: false,
+    },
+    {
+      id: 2,
+      title: "New Feature Available",
+      message: "You can now schedule letters to be sent at future dates!",
+      time: "1 day ago",
+      type: "feature",
+      read: false,
+    },
+    {
+      id: 3,
+      title: "Welcome to HeartPost",
+      message: "Thank you for joining our community of letter writers!",
+      time: "3 days ago",
+      type: "welcome",
+      read: true,
+    },
+  ]
+
   const handleNavigation = useCallback(
     (view: "personal" | "postoffice" | "bulletin") => {
       animate(() => onNavigate(view))
@@ -88,6 +116,12 @@ export const MainHall = React.memo<MainHallProps>(({ user, onNavigate, onLogout 
   const toggleSidebar = useCallback(() => {
     setSidebarOpen((prev) => !prev)
   }, [])
+
+  const toggleNotifications = useCallback(() => {
+    setShowNotifications((prev) => !prev)
+  }, [])
+
+  const unreadCount = notifications.filter((n) => !n.read).length
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 flex">
@@ -231,16 +265,96 @@ export const MainHall = React.memo<MainHallProps>(({ user, onNavigate, onLogout 
               <div className="text-center mb-8 relative">
                 {/* Notification Bell - positioned absolutely */}
                 <div className="absolute top-0 right-0">
-                  <Button
-                    className="relative bg-amber-600 hover:bg-amber-700 text-white p-2 rounded-full shadow-lg"
-                    title="System Notifications"
-                  >
-                    <Bell className="w-5 h-5" />
-                    {/* Notification badge */}
-                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xs font-bold">3</span>
-                    </div>
-                  </Button>
+                  <div className="relative">
+                    <Button
+                      onClick={toggleNotifications}
+                      className="relative bg-amber-600 hover:bg-amber-700 text-white p-2 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+                      title="System Notifications"
+                    >
+                      <Bell className="w-5 h-5" />
+                      {/* Notification badge */}
+                      {unreadCount > 0 && (
+                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center animate-pulse">
+                          <span className="text-white text-xs font-bold">{unreadCount}</span>
+                        </div>
+                      )}
+                    </Button>
+
+                    {/* Notification Dropdown */}
+                    {showNotifications && (
+                      <FadeIn>
+                        <div className="absolute top-12 right-0 w-80 bg-white rounded-xl shadow-2xl border border-amber-200 z-50 max-h-96 overflow-y-auto">
+                          {/* Header */}
+                          <div className="p-4 border-b border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50">
+                            <div className="flex items-center justify-between">
+                              <h3 className="font-serif text-amber-800 font-bold">Notifications</h3>
+                              <Button
+                                onClick={toggleNotifications}
+                                variant="ghost"
+                                size="sm"
+                                className="text-amber-600 hover:bg-amber-100"
+                              >
+                                <X className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </div>
+
+                          {/* Notifications List */}
+                          <div className="max-h-80 overflow-y-auto">
+                            {notifications.map((notification, index) => (
+                              <div
+                                key={notification.id}
+                                className={`p-4 border-b border-amber-100 hover:bg-amber-25 transition-colors cursor-pointer ${
+                                  !notification.read ? "bg-amber-50/50" : ""
+                                }`}
+                              >
+                                <div className="flex items-start space-x-3">
+                                  {/* Notification Icon */}
+                                  <div
+                                    className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                                      notification.type === "system"
+                                        ? "bg-blue-100 text-blue-600"
+                                        : notification.type === "feature"
+                                          ? "bg-green-100 text-green-600"
+                                          : "bg-purple-100 text-purple-600"
+                                    }`}
+                                  >
+                                    <Bell className="w-4 h-4" />
+                                  </div>
+
+                                  {/* Notification Content */}
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center justify-between mb-1">
+                                      <h4 className="font-serif text-amber-800 font-bold text-sm truncate">
+                                        {notification.title}
+                                      </h4>
+                                      {!notification.read && (
+                                        <div className="w-2 h-2 bg-red-500 rounded-full flex-shrink-0"></div>
+                                      )}
+                                    </div>
+                                    <p className="text-amber-700 text-xs mb-2 line-clamp-2">{notification.message}</p>
+                                    <p className="text-amber-500 text-xs">{notification.time}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* Footer */}
+                          <div className="p-3 bg-gray-50 border-t border-amber-200">
+                            <div className="flex justify-between items-center">
+                              <Button variant="ghost" size="sm" className="text-amber-600 hover:bg-amber-100 text-xs">
+                                Mark all as read
+                              </Button>
+                              <Button variant="ghost" size="sm" className="text-amber-600 hover:bg-amber-100 text-xs">
+                                View all
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </FadeIn>
+                    )}
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-center mb-4">
@@ -431,6 +545,9 @@ export const MainHall = React.memo<MainHallProps>(({ user, onNavigate, onLogout 
           </div>
         </div>
       </div>
+
+      {/* Overlay to close notifications when clicking outside */}
+      {showNotifications && <div className="fixed inset-0 z-40" onClick={toggleNotifications}></div>}
     </div>
   )
 })

@@ -259,22 +259,25 @@ export const MainHall = React.memo<MainHallProps>(({ user, onNavigate, onLogout 
         } flex flex-col h-screen`}
       >
         {/* Fixed Header - Compact Design */}
-        <div className="fixed top-0 right-0 z-30 bg-gradient-to-r from-amber-50/95 via-orange-50/95 to-amber-100/95 backdrop-blur-md border-b border-amber-200/50 shadow-lg">
-          <div className={`transition-all duration-500 ${sidebarOpen ? "ml-80" : "ml-16"}`}>
-            <div className="max-w-6xl mx-auto px-6 py-3">
-              <FadeIn delay={300}>
-                <div className="flex items-center justify-between">
-                  {/* Left side - Compact Title */}
-                  <div className="flex items-center">
-                    <Heart className="w-6 h-6 text-amber-600 mr-2 animate-pulse" />
-                    <div>
-                      <h1 className="text-lg font-serif text-amber-800 font-bold leading-tight">HeartPost Dashboard</h1>
-                      <p className="text-xs text-amber-600 font-serif italic leading-tight">
-                        Digital Post Office of Hearts
-                      </p>
-                    </div>
+        <div
+          className={`fixed top-0 z-30 bg-gradient-to-r from-amber-50/95 via-orange-50/95 to-amber-100/95 backdrop-blur-md border-b border-amber-200/50 shadow-lg transition-all duration-500 ${sidebarOpen ? "left-80" : "left-16"} right-0`}
+        >
+          <div className="px-6 py-3">
+            <FadeIn delay={300}>
+              <div className="flex items-center justify-center relative max-w-4xl mx-auto">
+                {/* Left side - Compact Title */}
+                <div className="flex items-center">
+                  <Heart className="w-6 h-6 text-amber-600 mr-2 animate-pulse" />
+                  <div>
+                    <h1 className="text-lg font-serif text-amber-800 font-bold leading-tight">HeartPost Dashboard</h1>
+                    <p className="text-xs text-amber-600 font-serif italic leading-tight">
+                      Digital Post Office of Hearts
+                    </p>
                   </div>
+                </div>
 
+                {/* Right side - Notification Bell - positioned absolutely */}
+                <div className="absolute right-0">
                   {/* Right side - Notification Bell */}
                   <div className="relative">
                     <Button
@@ -367,8 +370,8 @@ export const MainHall = React.memo<MainHallProps>(({ user, onNavigate, onLogout 
                     )}
                   </div>
                 </div>
-              </FadeIn>
-            </div>
+              </div>
+            </FadeIn>
           </div>
         </div>
 

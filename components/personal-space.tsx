@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from "react"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Book, Archive, User, PenTool, Heart, Calendar, Bell } from "lucide-react"
+import { ArrowLeft, Book, Archive, User, PenTool, Heart, Calendar, Bell, X } from "lucide-react"
 import { LetterWriter } from "./letter-writer"
 import { FadeIn } from "@/components/ui/fade-in"
 
@@ -14,6 +14,15 @@ interface PersonalSpaceProps {
 export const PersonalSpace = React.memo<PersonalSpaceProps>(({ user, onNavigate }) => {
   const [activeSection, setActiveSection] = useState<string>("welcome")
   const [showLetterWriter, setShowLetterWriter] = useState(false)
+
+  const [selectedPerson, setSelectedPerson] = useState<any>(null)
+  const [showPersonModal, setShowPersonModal] = useState(false)
+  const [editingDescription, setEditingDescription] = useState(false)
+  const [personDescription, setPersonDescription] = useState("")
+  const [showAddDateForm, setShowAddDateForm] = useState(false)
+  const [newDateTitle, setNewDateTitle] = useState("")
+  const [newDate, setNewDate] = useState("")
+  const [newDateDescription, setNewDateDescription] = useState("")
 
   const handleLetterWriterNavigation = useCallback(
     (view: "main" | "personal" | "postoffice" | "bulletin") => {
@@ -29,6 +38,29 @@ export const PersonalSpace = React.memo<PersonalSpaceProps>(({ user, onNavigate 
   const handleSectionChange = useCallback((section: string) => {
     setActiveSection(section)
   }, [])
+
+  const handlePersonClick = useCallback((person: any) => {
+    setSelectedPerson(person)
+    setPersonDescription(person.description || `${person.name} - ${person.relationship}`)
+    setShowPersonModal(true)
+  }, [])
+
+  const handleSaveDescription = useCallback(() => {
+    setEditingDescription(false)
+    // Here you would save to your data store
+  }, [])
+
+  const handleAddSpecialDate = useCallback(() => {
+    if (newDate && newDateTitle && newDateDescription) {
+      // Add the new date to the person's special dates
+      // This would typically update your data store
+      alert(`Added special date: ${newDateTitle} on ${newDate}`)
+      setShowAddDateForm(false)
+      setNewDate("")
+      setNewDateTitle("")
+      setNewDateDescription("")
+    }
+  }, [newDate, newDateTitle, newDateDescription])
 
   if (showLetterWriter) {
     return <LetterWriter user={user} onNavigate={handleLetterWriterNavigation} />
@@ -131,6 +163,7 @@ export const PersonalSpace = React.memo<PersonalSpaceProps>(({ user, onNavigate 
                             birthday: "March 15",
                             avatar: "M",
                             color: "bg-red-500",
+                            description: "My wonderful mother"
                           },
                           {
                             name: "Sarah Johnson",
@@ -138,6 +171,7 @@ export const PersonalSpace = React.memo<PersonalSpaceProps>(({ user, onNavigate 
                             birthday: "July 22",
                             avatar: "S",
                             color: "bg-blue-500",
+                            description: "My best friend since childhood"
                           },
                           {
                             name: "John Smith",
@@ -145,6 +179,7 @@ export const PersonalSpace = React.memo<PersonalSpaceProps>(({ user, onNavigate 
                             birthday: "December 10",
                             avatar: "J",
                             color: "bg-green-500",
+                            description: "My loving partner"
                           },
                           {
                             name: "Grandma",
@@ -152,10 +187,14 @@ export const PersonalSpace = React.memo<PersonalSpaceProps>(({ user, onNavigate 
                             birthday: "September 5",
                             avatar: "G",
                             color: "bg-purple-500",
+                            description: "My sweet grandma"
                           },
                         ].map((person, index) => (
                           <FadeIn key={person.name} delay={1000 + index * 100}>
-                            <div className="bg-white p-4 rounded-lg border border-amber-200 hover:bg-amber-25 hover:shadow-sm transition-all duration-300 cursor-pointer group">
+                            <div
+                              className="bg-white p-4 rounded-lg border border-amber-200 hover:bg-amber-25 hover:shadow-sm transition-all duration-300 cursor-pointer group"
+                              onClick={() => handlePersonClick(person)}
+                            >
                               <div className="flex items-center justify-between">
                                 <div className="flex items-center space-x-3">
                                   <div
@@ -490,6 +529,185 @@ export const PersonalSpace = React.memo<PersonalSpaceProps>(({ user, onNavigate 
           </div>
         </FadeIn>
       </div>
+
+      {/* Person Details Modal */}
+      {showPersonModal && selectedPerson && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <FadeIn>
+            <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-amber-200">
+              {/* Modal Header */}
+              <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-amber-50 to-orange-50">
+                <div className="flex items-center space-x-4">
+                  <div className={`w-16 h-16 ${selectedPerson.color} rounded-full flex items-center justify-center shadow-lg`}>
+                    <span className="font-serif font-bold text-white text-2xl">{selectedPerson.avatar}</span>
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-serif text-amber-800 font-bold">{selectedPerson.name}</h2>
+                    <p className="text-amber-600">{selectedPerson.relationship}</p>
+                  </div>
+                </div>
+                <Button
+                  onClick={() => setShowPersonModal(false)}
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+
+              {/* Modal Content */}
+              <div className="p-6 space-y-6">
+                {/* Description Section */}
+                <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="font-serif text-amber-800 font-bold">Là ai?</h3>
+                    <Button
+                      onClick={() => editingDescription ? handleSaveDescription() : setEditingDescription(true)}
+                      className="bg-amber-600 hover:bg-amber-700 text-white text-sm px-3 py-1"
+                    >
+                      {editingDescription ? "Save" : "Edit"}
+                    </Button>
+                  </div>
+                  {editingDescription ? (
+                    <textarea
+                      value={personDescription}
+                      onChange={(e) => setPersonDescription(e.target.value)}
+                      className="w-full p-3 border border-amber-300 rounded-lg font-serif text-amber-800 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none"
+                      rows={3}
+                      placeholder="Mô tả về người này..."
+                    />
+                  ) : (
+                    <p className="font-serif text-amber-700 italic">"{personDescription}"</p>
+                  )}
+                </div>
+
+                {/* Special Dates Section */}
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-serif text-amber-800 font-bold text-lg">Ngày Đặc Biệt</h3>
+                    <Button
+                      onClick={() => setShowAddDateForm(true)}
+                      className="bg-green-600 hover:bg-green-700 text-white text-sm px-3 py-1"
+                    >
+                      + Thêm Ngày
+                    </Button>
+                  </div>
+
+                  {/* Existing Special Dates */}
+                  <div className="space-y-3">
+                    {[
+                      {
+                        title: "Sinh nhật",
+                        date: selectedPerson.birthday,
+                        description: `Đây là ngày sinh nhật của ${selectedPerson.name}, một ngày rất đặc biệt để tôi thể hiện tình yêu thương.`
+                      },
+                      {
+                        title: "Ngày kỷ niệm",
+                        date: "January 20",
+                        description: `Ngày đầu tiên tôi gặp ${selectedPerson.name}, một kỷ niệm không thể nào quên.`
+                      }
+                    ].map((specialDate, index) => (
+                      <div key={index} className="bg-white p-4 rounded-lg border border-amber-200 hover:shadow-sm transition-shadow">
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex-1">
+                            <h4 className="font-serif text-amber-800 font-bold flex items-center">
+                              <Calendar className="w-4 h-4 mr-2 text-amber-600" />
+                              {specialDate.title}
+                            </h4>
+                            <p className="text-sm text-amber-600 mb-2">📅 {specialDate.date}</p>
+                            <p className="text-sm font-serif text-amber-700 italic">"{specialDate.description}"</p>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-amber-600 hover:text-amber-800 hover:bg-amber-50"
+                          >
+                            Edit
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Add New Date Form */}
+                  {showAddDateForm && (
+                    <div className="mt-4 bg-green-50 p-4 rounded-lg border border-green-200">
+                      <h4 className="font-serif text-green-800 font-bold mb-3">Thêm Ngày Đặc Biệt Mới</h4>
+                      <div className="space-y-3">
+                        <div>
+                          <label className="block font-serif text-green-800 font-bold mb-1">Tên sự kiện</label>
+                          <input
+                            type="text"
+                            value={newDateTitle}
+                            onChange={(e) => setNewDateTitle(e.target.value)}
+                            placeholder="Ví dụ: Sinh nhật, Kỷ niệm..."
+                            className="w-full p-2 border border-green-300 rounded-lg font-serif text-green-800 bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="block font-serif text-green-800 font-bold mb-1">Ngày</label>
+                          <input
+                            type="date"
+                            value={newDate}
+                            onChange={(e) => setNewDate(e.target.value)}
+                            className="w-full p-2 border border-green-300 rounded-lg font-serif text-green-800 bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="block font-serif text-green-800 font-bold mb-1">Mô tả</label>
+                          <textarea
+                            value={newDateDescription}
+                            onChange={(e) => setNewDateDescription(e.target.value)}
+                            placeholder={`Đây là ngày đặc biệt của ${selectedPerson.name}, là ngày...`}
+                            className="w-full p-2 border border-green-300 rounded-lg font-serif text-green-800 bg-white focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
+                            rows={3}
+                          />
+                        </div>
+                        <div className="flex space-x-3">
+                          <Button
+                            onClick={handleAddSpecialDate}
+                            disabled={!newDate || !newDateTitle || !newDateDescription}
+                            className="bg-green-600 hover:bg-green-700 text-white disabled:opacity-50"
+                          >
+                            Thêm Ngày
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              setShowAddDateForm(false)
+                              setNewDate("")
+                              setNewDateTitle("")
+                              setNewDateDescription("")
+                            }}
+                            className="bg-gray-600 hover:bg-gray-700 text-white"
+                          >
+                            Hủy
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Quick Actions */}
+                  <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
+                    <h4 className="font-serif text-amber-800 font-bold mb-3">Hành động nhanh</h4>
+                    <div className="flex flex-wrap gap-2">
+                      <Button className="bg-blue-600 hover:bg-blue-700 text-white text-sm">
+                        📝 Viết thư cho {selectedPerson.name}
+                      </Button>
+                      <Button className="bg-purple-600 hover:bg-purple-700 text-white text-sm">
+                        📞 Đặt lịch nhắc nhở
+                      </Button>
+                      <Button className="bg-orange-600 hover:bg-orange-700 text-white text-sm">
+                        🎁 Lên kế hoạch quà tặng
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </FadeIn>
+          </div>
+        )}
     </div>
   )
 })

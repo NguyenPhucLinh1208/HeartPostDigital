@@ -127,7 +127,7 @@ export const MainHall = React.memo<MainHallProps>(({ user, onNavigate, onLogout 
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 flex">
       {/* Enhanced Fixed Sidebar - giữ nguyên */}
       <div
-        className={`fixed top-0 left-0 h-full bg-white/95 backdrop-blur-md shadow-2xl transition-all duration-500 ease-in-out z-40 ${
+        className={`fixed top-0 left-0 h-full bg-white/95 backdrop-blur-md shadow-2xl transition-all duration-500 ease-in-out z-50 ${
           sidebarOpen ? "w-80" : "w-16"
         } flex flex-col border-r border-amber-200/50`}
       >
@@ -258,114 +258,114 @@ export const MainHall = React.memo<MainHallProps>(({ user, onNavigate, onLogout 
           sidebarOpen ? "ml-80" : "ml-16"
         } flex flex-col h-screen`}
       >
-        {/* Fixed Header */}
-        <div className="fixed top-0 right-0 left-0 z-50 bg-gradient-to-br from-amber-50/95 via-orange-50/95 to-amber-100/95 backdrop-blur-md border-b border-amber-200/50 shadow-lg">
+        {/* Fixed Header - Compact Design */}
+        <div className="fixed top-0 right-0 z-30 bg-gradient-to-r from-amber-50/95 via-orange-50/95 to-amber-100/95 backdrop-blur-md border-b border-amber-200/50 shadow-lg">
           <div className={`transition-all duration-500 ${sidebarOpen ? "ml-80" : "ml-16"}`}>
-            <div className="max-w-6xl mx-auto px-6 py-4">
+            <div className="max-w-6xl mx-auto px-6 py-3">
               <FadeIn delay={300}>
-                <div className="text-center relative">
-                  {/* Notification Bell - positioned absolutely with highest z-index */}
-                  <div className="absolute top-0 right-0">
-                    <div className="relative">
-                      <Button
-                        onClick={toggleNotifications}
-                        className="relative bg-amber-600 hover:bg-amber-700 text-white p-2 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
-                        title="System Notifications"
-                      >
-                        <Bell className="w-5 h-5" />
-                        {/* Notification badge */}
-                        {unreadCount > 0 && (
-                          <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center animate-pulse">
-                            <span className="text-white text-xs font-bold">{unreadCount}</span>
-                          </div>
-                        )}
-                      </Button>
-
-                      {/* Notification Dropdown with highest z-index */}
-                      {showNotifications && (
-                        <FadeIn>
-                          <div className="absolute top-12 right-0 w-80 bg-white rounded-xl shadow-2xl border border-amber-200 z-[9999] max-h-96 overflow-y-auto">
-                            {/* Header */}
-                            <div className="p-4 border-b border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50">
-                              <div className="flex items-center justify-between">
-                                <h3 className="font-serif text-amber-800 font-bold">Notifications</h3>
-                                <Button
-                                  onClick={toggleNotifications}
-                                  variant="ghost"
-                                  size="sm"
-                                  className="text-amber-600 hover:bg-amber-100"
-                                >
-                                  <X className="w-4 h-4" />
-                                </Button>
-                              </div>
-                            </div>
-
-                            {/* Notifications List */}
-                            <div className="max-h-80 overflow-y-auto">
-                              {notifications.map((notification, index) => (
-                                <div
-                                  key={notification.id}
-                                  className={`p-4 border-b border-amber-100 hover:bg-amber-25 transition-colors cursor-pointer ${
-                                    !notification.read ? "bg-amber-50/50" : ""
-                                  }`}
-                                >
-                                  <div className="flex items-start space-x-3">
-                                    {/* Notification Icon */}
-                                    <div
-                                      className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                                        notification.type === "system"
-                                          ? "bg-blue-100 text-blue-600"
-                                          : notification.type === "feature"
-                                            ? "bg-green-100 text-green-600"
-                                            : "bg-purple-100 text-purple-600"
-                                      }`}
-                                    >
-                                      <Bell className="w-4 h-4" />
-                                    </div>
-
-                                    {/* Notification Content */}
-                                    <div className="flex-1 min-w-0">
-                                      <div className="flex items-center justify-between mb-1">
-                                        <h4 className="font-serif text-amber-800 font-bold text-sm truncate">
-                                          {notification.title}
-                                        </h4>
-                                        {!notification.read && (
-                                          <div className="w-2 h-2 bg-red-500 rounded-full flex-shrink-0"></div>
-                                        )}
-                                      </div>
-                                      <p className="text-amber-700 text-xs mb-2 line-clamp-2">{notification.message}</p>
-                                      <p className="text-amber-500 text-xs">{notification.time}</p>
-                                    </div>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-
-                            {/* Footer */}
-                            <div className="p-3 bg-gray-50 border-t border-amber-200">
-                              <div className="flex justify-between items-center">
-                                <Button variant="ghost" size="sm" className="text-amber-600 hover:bg-amber-100 text-xs">
-                                  Mark all as read
-                                </Button>
-                                <Button variant="ghost" size="sm" className="text-amber-600 hover:bg-amber-100 text-xs">
-                                  View all
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-                        </FadeIn>
-                      )}
+                <div className="flex items-center justify-between">
+                  {/* Left side - Compact Title */}
+                  <div className="flex items-center">
+                    <Heart className="w-6 h-6 text-amber-600 mr-2 animate-pulse" />
+                    <div>
+                      <h1 className="text-lg font-serif text-amber-800 font-bold leading-tight">HeartPost Dashboard</h1>
+                      <p className="text-xs text-amber-600 font-serif italic leading-tight">
+                        Digital Post Office of Hearts
+                      </p>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-center">
-                    <Heart className="w-8 h-8 text-amber-600 mr-3 animate-pulse" />
-                    <h1 className="text-2xl sm:text-3xl font-serif text-amber-800 font-bold bg-gradient-to-r from-amber-800 to-amber-600 bg-clip-text">
-                      HeartPost Dashboard
-                    </h1>
-                    <Heart className="w-8 h-8 text-amber-600 ml-3 animate-pulse animation-delay-500" />
+                  {/* Right side - Notification Bell */}
+                  <div className="relative">
+                    <Button
+                      onClick={toggleNotifications}
+                      className="relative bg-amber-600 hover:bg-amber-700 text-white p-2 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+                      title="System Notifications"
+                    >
+                      <Bell className="w-5 h-5" />
+                      {/* Notification badge */}
+                      {unreadCount > 0 && (
+                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center animate-pulse">
+                          <span className="text-white text-xs font-bold">{unreadCount}</span>
+                        </div>
+                      )}
+                    </Button>
+
+                    {/* Notification Dropdown with highest z-index */}
+                    {showNotifications && (
+                      <FadeIn>
+                        <div className="absolute top-12 right-0 w-80 bg-white rounded-xl shadow-2xl border border-amber-200 z-[9999] max-h-96 overflow-y-auto">
+                          {/* Header */}
+                          <div className="p-4 border-b border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50">
+                            <div className="flex items-center justify-between">
+                              <h3 className="font-serif text-amber-800 font-bold">Notifications</h3>
+                              <Button
+                                onClick={toggleNotifications}
+                                variant="ghost"
+                                size="sm"
+                                className="text-amber-600 hover:bg-amber-100"
+                              >
+                                <X className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </div>
+
+                          {/* Notifications List */}
+                          <div className="max-h-80 overflow-y-auto">
+                            {notifications.map((notification, index) => (
+                              <div
+                                key={notification.id}
+                                className={`p-4 border-b border-amber-100 hover:bg-amber-25 transition-colors cursor-pointer ${
+                                  !notification.read ? "bg-amber-50/50" : ""
+                                }`}
+                              >
+                                <div className="flex items-start space-x-3">
+                                  {/* Notification Icon */}
+                                  <div
+                                    className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                                      notification.type === "system"
+                                        ? "bg-blue-100 text-blue-600"
+                                        : notification.type === "feature"
+                                          ? "bg-green-100 text-green-600"
+                                          : "bg-purple-100 text-purple-600"
+                                    }`}
+                                  >
+                                    <Bell className="w-4 h-4" />
+                                  </div>
+
+                                  {/* Notification Content */}
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center justify-between mb-1">
+                                      <h4 className="font-serif text-amber-800 font-bold text-sm truncate">
+                                        {notification.title}
+                                      </h4>
+                                      {!notification.read && (
+                                        <div className="w-2 h-2 bg-red-500 rounded-full flex-shrink-0"></div>
+                                      )}
+                                    </div>
+                                    <p className="text-amber-700 text-xs mb-2 line-clamp-2">{notification.message}</p>
+                                    <p className="text-amber-500 text-xs">{notification.time}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* Footer */}
+                          <div className="p-3 bg-gray-50 border-t border-amber-200">
+                            <div className="flex justify-between items-center">
+                              <Button variant="ghost" size="sm" className="text-amber-600 hover:bg-amber-100 text-xs">
+                                Mark all as read
+                              </Button>
+                              <Button variant="ghost" size="sm" className="text-amber-600 hover:bg-amber-100 text-xs">
+                                View all
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </FadeIn>
+                    )}
                   </div>
-                  <p className="text-lg text-amber-700 font-serif italic">The Digital Post Office of Hearts</p>
                 </div>
               </FadeIn>
             </div>
@@ -373,7 +373,7 @@ export const MainHall = React.memo<MainHallProps>(({ user, onNavigate, onLogout 
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-y-auto pt-24">
+        <div className="flex-1 overflow-y-auto pt-16">
           <div className="p-6">
             <div className="max-w-6xl mx-auto">
               {/* Enhanced Welcome Section */}

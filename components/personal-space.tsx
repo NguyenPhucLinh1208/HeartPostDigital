@@ -24,6 +24,23 @@ export const PersonalSpace = React.memo<PersonalSpaceProps>(({ user, onNavigate 
   const [newDate, setNewDate] = useState("")
   const [newDateDescription, setNewDateDescription] = useState("")
 
+  const [editingProfile, setEditingProfile] = useState(false)
+  const [userProfile, setUserProfile] = useState({
+    birthday: "",
+    location: "",
+    bio: "",
+    emailNotifications: true,
+    publicProfile: false,
+  })
+  const [editedProfile, setEditedProfile] = useState({
+    displayName: user,
+    birthday: "",
+    location: "",
+    bio: "",
+    emailNotifications: true,
+    publicProfile: false,
+  })
+
   const handleLetterWriterNavigation = useCallback(
     (view: "main" | "personal" | "postoffice" | "bulletin") => {
       if (view === "personal") {
@@ -61,6 +78,18 @@ export const PersonalSpace = React.memo<PersonalSpaceProps>(({ user, onNavigate 
       setNewDateDescription("")
     }
   }, [newDate, newDateTitle, newDateDescription])
+
+  const handleSaveProfile = useCallback(() => {
+    setUserProfile({
+      birthday: editedProfile.birthday,
+      location: editedProfile.location,
+      bio: editedProfile.bio,
+      emailNotifications: editedProfile.emailNotifications,
+      publicProfile: editedProfile.publicProfile,
+    })
+    setEditingProfile(false)
+    alert("Profile updated successfully!")
+  }, [editedProfile])
 
   if (showLetterWriter) {
     return <LetterWriter user={user} onNavigate={handleLetterWriterNavigation} />
@@ -477,32 +506,188 @@ export const PersonalSpace = React.memo<PersonalSpaceProps>(({ user, onNavigate 
             {activeSection === "profile" && (
               <div>
                 <h2 className="text-xl sm:text-2xl font-serif text-amber-800 mb-6">Your Profile</h2>
-                <div className="flex flex-col sm:flex-row items-start space-y-6 sm:space-y-0 sm:space-x-8">
-                  <div className="w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-amber-400 to-amber-500 rounded-full flex items-center justify-center shadow-lg mx-auto sm:mx-0">
-                    <User className="w-12 h-12 sm:w-16 sm:h-16 text-white" />
-                  </div>
-                  <div className="flex-1 text-center sm:text-left">
-                    <h3 className="text-xl sm:text-2xl font-serif text-amber-800 mb-2">{user}</h3>
-                    <p className="text-amber-700 mb-4">HeartPost Member since 2024</p>
-                    <div className="space-y-2 text-amber-700">
-                      <p>
-                        <strong>Member ID:</strong> HP-{user.toUpperCase()}-2024
-                      </p>
-                      <p>
-                        <strong>Letters Sent:</strong> 12
-                      </p>
-                      <p>
-                        <strong>Letters Received:</strong> 8
-                      </p>
-                      <p>
-                        <strong>Friends:</strong> 25
-                      </p>
+
+                {!editingProfile ? (
+                  // View Profile Mode
+                  <div>
+                    <div className="flex flex-col sm:flex-row items-start space-y-6 sm:space-y-0 sm:space-x-8 mb-8">
+                      <div className="w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-amber-400 to-amber-500 rounded-full flex items-center justify-center shadow-lg mx-auto sm:mx-0">
+                        <User className="w-12 h-12 sm:w-16 sm:h-16 text-white" />
+                      </div>
+                      <div className="flex-1 text-center sm:text-left">
+                        <h3 className="text-xl sm:text-2xl font-serif text-amber-800 mb-2">{user}</h3>
+                        <p className="text-amber-700 mb-4">HeartPost Member since 2024</p>
+
+                        {/* Personal Info */}
+                        <div className="bg-amber-50 p-4 rounded-lg border border-amber-200 mb-4">
+                          <div className="space-y-3 text-left">
+                            <div className="flex justify-between items-center">
+                              <span className="font-serif text-amber-800 font-bold">Birthday:</span>
+                              <span className="text-amber-700">{userProfile.birthday || "Not set"}</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="font-serif text-amber-800 font-bold">Location:</span>
+                              <span className="text-amber-700">{userProfile.location || "Not set"}</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="font-serif text-amber-800 font-bold">Joined:</span>
+                              <span className="text-amber-700">January 2024</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Bio Section */}
+                        <div className="bg-white p-4 rounded-lg border border-amber-200 mb-4">
+                          <h4 className="font-serif text-amber-800 font-bold mb-2">About Me</h4>
+                          <p className="text-amber-700 font-serif italic text-sm">
+                            {userProfile.bio || "No bio added yet. Click Edit Profile to add your story!"}
+                          </p>
+                        </div>
+
+                        {/* Stats */}
+                        <div className="grid grid-cols-2 gap-4 mb-6">
+                          <div className="bg-green-50 p-3 rounded-lg border border-green-200 text-center">
+                            <p className="text-2xl font-bold text-green-700">12</p>
+                            <p className="text-sm text-green-600 font-serif">Letters Sent</p>
+                          </div>
+                          <div className="bg-blue-50 p-3 rounded-lg border border-blue-200 text-center">
+                            <p className="text-2xl font-bold text-blue-700">8</p>
+                            <p className="text-sm text-blue-600 font-serif">Letters Received</p>
+                          </div>
+                        </div>
+
+                        <Button
+                          onClick={() => setEditingProfile(true)}
+                          className="bg-amber-700 hover:bg-amber-600 text-white btn-hover-lift"
+                        >
+                          Edit Profile
+                        </Button>
+                      </div>
                     </div>
-                    <Button className="mt-6 bg-amber-700 hover:bg-amber-600 text-white btn-hover-lift">
-                      Edit Profile
-                    </Button>
                   </div>
-                </div>
+                ) : (
+                  // Edit Profile Mode
+                  <div className="max-w-2xl mx-auto">
+                    <div className="bg-white p-6 rounded-lg border border-amber-200 shadow-sm">
+                      <h3 className="text-xl font-serif text-amber-800 font-bold mb-6">Edit Your Profile</h3>
+
+                      <div className="space-y-6">
+                        {/* Profile Picture Section */}
+                        <div className="text-center">
+                          <div className="w-24 h-24 bg-gradient-to-br from-amber-400 to-amber-500 rounded-full flex items-center justify-center shadow-lg mx-auto mb-4">
+                            <User className="w-12 h-12 text-white" />
+                          </div>
+                          <Button className="bg-blue-600 hover:bg-blue-700 text-white text-sm">Change Avatar</Button>
+                        </div>
+
+                        {/* Basic Info */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block font-serif text-amber-800 font-bold mb-2">Display Name</label>
+                            <input
+                              type="text"
+                              value={editedProfile.displayName}
+                              onChange={(e) => setEditedProfile({ ...editedProfile, displayName: e.target.value })}
+                              className="w-full p-3 border border-amber-300 rounded-lg font-serif text-amber-800 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                              placeholder="Your display name"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block font-serif text-amber-800 font-bold mb-2">Birthday</label>
+                            <input
+                              type="date"
+                              value={editedProfile.birthday}
+                              onChange={(e) => setEditedProfile({ ...editedProfile, birthday: e.target.value })}
+                              className="w-full p-3 border border-amber-300 rounded-lg font-serif text-amber-800 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block font-serif text-amber-800 font-bold mb-2">Location</label>
+                          <input
+                            type="text"
+                            value={editedProfile.location}
+                            onChange={(e) => setEditedProfile({ ...editedProfile, location: e.target.value })}
+                            className="w-full p-3 border border-amber-300 rounded-lg font-serif text-amber-800 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                            placeholder="Your city, country"
+                          />
+                        </div>
+
+                        {/* Bio Section */}
+                        <div>
+                          <label className="block font-serif text-amber-800 font-bold mb-2">About Me</label>
+                          <textarea
+                            value={editedProfile.bio}
+                            onChange={(e) => setEditedProfile({ ...editedProfile, bio: e.target.value })}
+                            className="w-full p-3 border border-amber-300 rounded-lg font-serif text-amber-800 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none"
+                            rows={4}
+                            placeholder="Tell us about yourself, your interests, why you love writing letters..."
+                            maxLength={500}
+                          />
+                          <p className="text-sm text-amber-600 mt-1">{editedProfile.bio.length}/500 characters</p>
+                        </div>
+
+                        {/* Preferences */}
+                        <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
+                          <h4 className="font-serif text-amber-800 font-bold mb-3">Preferences</h4>
+                          <div className="space-y-3">
+                            <label className="flex items-center">
+                              <input
+                                type="checkbox"
+                                checked={editedProfile.emailNotifications}
+                                onChange={(e) =>
+                                  setEditedProfile({ ...editedProfile, emailNotifications: e.target.checked })
+                                }
+                                className="mr-3 text-amber-600 focus:ring-amber-500"
+                              />
+                              <span className="font-serif text-amber-800">Receive email notifications</span>
+                            </label>
+
+                            <label className="flex items-center">
+                              <input
+                                type="checkbox"
+                                checked={editedProfile.publicProfile}
+                                onChange={(e) =>
+                                  setEditedProfile({ ...editedProfile, publicProfile: e.target.checked })
+                                }
+                                className="mr-3 text-amber-600 focus:ring-amber-500"
+                              />
+                              <span className="font-serif text-amber-800">Make profile visible to community</span>
+                            </label>
+                          </div>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex flex-col sm:flex-row gap-4">
+                          <Button
+                            onClick={handleSaveProfile}
+                            className="flex-1 bg-green-600 hover:bg-green-700 text-white btn-hover-lift"
+                          >
+                            Save Changes
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              setEditingProfile(false)
+                              setEditedProfile({
+                                displayName: user,
+                                birthday: userProfile.birthday || "",
+                                location: userProfile.location || "",
+                                bio: userProfile.bio || "",
+                                emailNotifications: userProfile.emailNotifications || true,
+                                publicProfile: userProfile.publicProfile || false,
+                              })
+                            }}
+                            className="flex-1 bg-gray-600 hover:bg-gray-700 text-white"
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 

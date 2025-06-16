@@ -11,7 +11,7 @@ interface BulletinBoardProps {
 }
 
 export const BulletinBoard = React.memo<BulletinBoardProps>(({ user, onNavigate }) => {
-  const [activeTab, setActiveTab] = useState<"official" | "community">("official")
+  const [activeTab, setActiveTab] = useState<"friends" | "community">("friends")
   const [showStoryForm, setShowStoryForm] = useState(false)
   const [storyTitle, setStoryTitle] = useState("")
   const [storyContent, setStoryContent] = useState("")
@@ -58,16 +58,16 @@ export const BulletinBoard = React.memo<BulletinBoardProps>(({ user, onNavigate 
           <div className="flex justify-center mb-8">
             <div className="bg-amber-800/90 backdrop-blur-sm p-1 rounded-xl shadow-lg border border-amber-700">
               <button
-                onClick={() => setActiveTab("official")}
+                onClick={() => setActiveTab("friends")}
                 className={`px-4 sm:px-6 py-3 rounded-lg font-serif transition-all duration-300 ${
-                  activeTab === "official"
+                  activeTab === "friends"
                     ? "bg-amber-100 text-amber-800 shadow-md scale-105"
                     : "text-amber-100 hover:bg-amber-700/50"
                 }`}
               >
-                <Bell className="w-4 h-4 inline mr-2" />
-                <span className="hidden sm:inline">Official News</span>
-                <span className="sm:hidden">Official</span>
+                <Users className="w-4 h-4 inline mr-2" />
+                <span className="hidden sm:inline">My Friends</span>
+                <span className="sm:hidden">Friends</span>
               </button>
               <button
                 onClick={() => setActiveTab("community")}
@@ -88,49 +88,122 @@ export const BulletinBoard = React.memo<BulletinBoardProps>(({ user, onNavigate 
         {/* Enhanced Content */}
         <FadeIn delay={600}>
           <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl p-6 sm:p-8 min-h-96 border border-amber-200/50">
-            {activeTab === "official" && (
+            {activeTab === "friends" && (
               <div className="space-y-6">
-                <h2 className="text-xl sm:text-2xl font-serif text-amber-800 mb-6">Official Announcements</h2>
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl sm:text-2xl font-serif text-amber-800">My Friends</h2>
+                  <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                    <Users className="w-4 h-4 mr-2" />
+                    Add Friend
+                  </Button>
+                </div>
 
-                {/* Enhanced Notices */}
-                {[
-                  {
-                    title: "System Maintenance",
-                    date: "Dec 15, 2024",
-                    content:
-                      "Our system will undergo scheduled maintenance from 2:00 AM to 4:00 AM on December 16, 2024. During this time, some services may be temporarily unavailable.",
-                    color: "red",
-                  },
-                  {
-                    title: "New Feature: Scheduled Letters",
-                    date: "Dec 10, 2024",
-                    content:
-                      "You can now schedule your letters to be sent at a future date! Perfect for birthdays, anniversaries, and special occasions.",
-                    color: "yellow",
-                  },
-                  {
-                    title: "Happy New Year 2025!",
-                    date: "Jan 1, 2025",
-                    content:
-                      "Wishing all our HeartPost family a wonderful new year filled with meaningful connections and beautiful letters!",
-                    color: "green",
-                  },
-                ].map((notice, index) => (
-                  <FadeIn key={notice.title} delay={700 + index * 100}>
-                    <div
-                      className={`bg-${notice.color}-50 border-l-4 border-${notice.color}-500 p-4 sm:p-6 rounded-lg hover:shadow-md transition-all duration-300 hover:translate-x-1`}
-                    >
-                      <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-4 gap-2">
-                        <div className="flex items-center">
-                          <div className={`w-3 h-3 bg-${notice.color}-500 rounded-full mr-3 flex-shrink-0`}></div>
-                          <h3 className="text-lg sm:text-xl font-serif text-amber-800 font-bold">{notice.title}</h3>
+                {/* Friends List */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {[
+                    {
+                      name: "Sarah Johnson",
+                      avatar: "S",
+                      color: "bg-blue-500",
+                      status: "online",
+                      lastLetter: "2 days ago",
+                      mutualFriends: 5,
+                    },
+                    {
+                      name: "Mike Chen",
+                      avatar: "M",
+                      color: "bg-green-500",
+                      status: "offline",
+                      lastLetter: "1 week ago",
+                      mutualFriends: 3,
+                    },
+                    {
+                      name: "Emma Wilson",
+                      avatar: "E",
+                      color: "bg-purple-500",
+                      status: "online",
+                      lastLetter: "Yesterday",
+                      mutualFriends: 8,
+                    },
+                    {
+                      name: "David Brown",
+                      avatar: "D",
+                      color: "bg-orange-500",
+                      status: "offline",
+                      lastLetter: "3 days ago",
+                      mutualFriends: 2,
+                    },
+                  ].map((friend, index) => (
+                    <FadeIn key={friend.name} delay={700 + index * 100}>
+                      <div className="bg-amber-50 p-4 rounded-lg border border-amber-200 hover:shadow-md transition-all duration-300 group">
+                        <div className="flex items-center space-x-4">
+                          <div className="relative">
+                            <div
+                              className={`w-12 h-12 ${friend.color} rounded-full flex items-center justify-center shadow-md group-hover:scale-110 transition-transform`}
+                            >
+                              <span className="font-serif font-bold text-white">{friend.avatar}</span>
+                            </div>
+                            <div
+                              className={`absolute -bottom-1 -right-1 w-4 h-4 ${friend.status === "online" ? "bg-green-500" : "bg-gray-400"} rounded-full border-2 border-white`}
+                            ></div>
+                          </div>
+
+                          <div className="flex-1">
+                            <h4 className="font-serif text-amber-800 font-bold">{friend.name}</h4>
+                            <p className="text-xs text-amber-600">Last letter: {friend.lastLetter}</p>
+                            <p className="text-xs text-amber-500">{friend.mutualFriends} mutual friends</p>
+                          </div>
+
+                          <div className="flex flex-col space-y-2">
+                            <Button className="bg-amber-600 hover:bg-amber-700 text-white text-xs px-3 py-1">
+                              Write Letter
+                            </Button>
+                            <Button variant="ghost" className="text-amber-600 hover:bg-amber-100 text-xs px-3 py-1">
+                              View Profile
+                            </Button>
+                          </div>
                         </div>
-                        <span className="text-sm text-amber-600 flex-shrink-0">{notice.date}</span>
                       </div>
-                      <p className="text-amber-700 font-serif">{notice.content}</p>
-                    </div>
-                  </FadeIn>
-                ))}
+                    </FadeIn>
+                  ))}
+                </div>
+
+                {/* Friend Requests */}
+                <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                  <h3 className="font-serif text-blue-800 font-bold mb-3 flex items-center">
+                    <Bell className="w-4 h-4 mr-2" />
+                    Friend Requests (2)
+                  </h3>
+                  <div className="space-y-3">
+                    {[
+                      { name: "Anna Lee", avatar: "A", mutualFriends: 4 },
+                      { name: "Tom Wilson", avatar: "T", mutualFriends: 1 },
+                    ].map((request, index) => (
+                      <div
+                        key={index}
+                        className="bg-white p-3 rounded border border-blue-200 flex items-center justify-between"
+                      >
+                        <div className="flex items-center space-x-3">
+                          <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                            <span className="font-serif font-bold text-white text-sm">{request.avatar}</span>
+                          </div>
+                          <div>
+                            <p className="font-serif text-blue-800 font-bold text-sm">{request.name}</p>
+                            <p className="text-xs text-blue-600">{request.mutualFriends} mutual friends</p>
+                          </div>
+                        </div>
+                        <div className="flex space-x-2">
+                          <Button className="bg-green-600 hover:bg-green-700 text-white text-xs px-2 py-1">
+                            Accept
+                          </Button>
+                          <Button className="bg-gray-600 hover:bg-gray-700 text-white text-xs px-2 py-1">
+                            Decline
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
 

@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect, useCallback, useMemo } from "react"
-import { Clock, Mail, Users, Heart, Star, Calendar, Award, Menu, X, ChevronRight, LogOut } from "lucide-react"
+import { Clock, Mail, Users, Heart, Star, Calendar, Award, Menu, X, ChevronRight, LogOut, Bell } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { FadeIn } from "@/components/ui/fade-in"
 import { useAnimation } from "@/hooks/useAnimation"
@@ -228,7 +228,21 @@ export const MainHall = React.memo<MainHallProps>(({ user, onNavigate, onLogout 
           <div className="max-w-6xl mx-auto">
             {/* Enhanced Header Section */}
             <FadeIn delay={300}>
-              <div className="text-center mb-8">
+              <div className="text-center mb-8 relative">
+                {/* Notification Bell - positioned absolutely */}
+                <div className="absolute top-0 right-0">
+                  <Button
+                    className="relative bg-amber-600 hover:bg-amber-700 text-white p-2 rounded-full shadow-lg"
+                    title="System Notifications"
+                  >
+                    <Bell className="w-5 h-5" />
+                    {/* Notification badge */}
+                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs font-bold">3</span>
+                    </div>
+                  </Button>
+                </div>
+
                 <div className="flex items-center justify-center mb-4">
                   <Heart className="w-12 h-12 text-amber-600 mr-4 animate-pulse" />
                   <h1 className="text-4xl font-serif text-amber-800 font-bold bg-gradient-to-r from-amber-800 to-amber-600 bg-clip-text">

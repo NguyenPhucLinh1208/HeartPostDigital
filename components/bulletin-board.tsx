@@ -123,170 +123,187 @@ export const BulletinBoard = React.memo<BulletinBoardProps>(({ user, onNavigate 
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-100 via-orange-50 to-amber-200 p-4 sm:p-6">
-      {/* Back Button */}
-      <FadeIn>
-        <Button onClick={() => onNavigate("main")} className="mb-6 bg-amber-700 hover:bg-amber-600 text-amber-100">
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Hall
-        </Button>
-      </FadeIn>
+    <div className="min-h-screen bg-gradient-to-br from-amber-100 via-orange-50 to-amber-200 flex flex-col">
+      {/* Fixed Header */}
+      <div className="fixed top-0 left-0 right-0 z-30 bg-gradient-to-r from-amber-50/95 via-orange-50/95 to-amber-100/95 backdrop-blur-md border-b border-amber-200/50 shadow-lg">
+        <div className="px-6 py-3">
+          <FadeIn delay={300}>
+            <div className="flex items-center justify-center relative max-w-4xl mx-auto">
+              {/* Left side - Back Button */}
+              <div className="absolute left-0">
+                <Button onClick={() => onNavigate("main")} className="bg-amber-700 hover:bg-amber-600 text-amber-100">
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back to Hall
+                </Button>
+              </div>
 
-      <div className="max-w-4xl mx-auto">
-        {/* Enhanced Header */}
-        <FadeIn delay={200}>
-          <div className="text-center mb-8">
-            <h1 className="text-2xl sm:text-3xl font-serif text-amber-800 mb-4">HeartPost Bulletin Board</h1>
-            <p className="text-amber-700 font-serif italic">Stay connected with our community</p>
-          </div>
-        </FadeIn>
-
-        {/* Enhanced Tab Navigation */}
-        <FadeIn delay={400}>
-          <div className="flex justify-center mb-8">
-            <div className="bg-amber-800/90 backdrop-blur-sm p-1 rounded-xl shadow-lg border border-amber-700">
-              <button
-                onClick={() => setActiveTab("friends")}
-                className={`px-4 sm:px-6 py-3 rounded-lg font-serif transition-all duration-300 ${
-                  activeTab === "friends"
-                    ? "bg-amber-100 text-amber-800 shadow-md scale-105"
-                    : "text-amber-100 hover:bg-amber-700/50"
-                }`}
-              >
-                <Users className="w-4 h-4 inline mr-2" />
-                <span className="hidden sm:inline">Friends' Posts</span>
-                <span className="sm:hidden">Friends</span>
-              </button>
-              <button
-                onClick={() => setActiveTab("community")}
-                className={`px-4 sm:px-6 py-3 rounded-lg font-serif transition-all duration-300 ${
-                  activeTab === "community"
-                    ? "bg-amber-100 text-amber-800 shadow-md scale-105"
-                    : "text-amber-100 hover:bg-amber-700/50"
-                }`}
-              >
-                <Users className="w-4 h-4 inline mr-2" />
-                <span className="hidden sm:inline">Community</span>
-                <span className="sm:hidden">Community</span>
-              </button>
+              {/* Center - Title */}
+              <div className="flex items-center">
+                <Users className="w-6 h-6 text-amber-600 mr-2 animate-pulse" />
+                <div>
+                  <h1 className="text-lg font-serif text-amber-800 font-bold leading-tight">Community Board</h1>
+                  <p className="text-xs text-amber-600 font-serif italic leading-tight">
+                    Stay connected with our community
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
-        </FadeIn>
+          </FadeIn>
+        </div>
+      </div>
 
-        {/* Enhanced Content */}
-        <FadeIn delay={600}>
-          <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl p-6 sm:p-8 min-h-96 border border-amber-200/50">
-            {activeTab === "friends" && (
-              <div>
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-                  <h2 className="text-xl sm:text-2xl font-serif text-amber-800">Friends' Posts</h2>
-                  <div className="text-sm text-amber-600 font-serif italic">
-                    See what your friends are sharing about their letter-writing journey
-                  </div>
+      {/* Scrollable Content Area */}
+      <div className="flex-1 overflow-y-auto pt-16">
+        <div className="p-4 sm:p-6">
+          <div className="max-w-4xl mx-auto">
+            {/* Enhanced Tab Navigation */}
+            <FadeIn delay={400}>
+              <div className="flex justify-center mb-8">
+                <div className="bg-amber-800/90 backdrop-blur-sm p-1 rounded-xl shadow-lg border border-amber-700">
+                  <button
+                    onClick={() => setActiveTab("friends")}
+                    className={`px-4 sm:px-6 py-3 rounded-lg font-serif transition-all duration-300 ${
+                      activeTab === "friends"
+                        ? "bg-amber-100 text-amber-800 shadow-md scale-105"
+                        : "text-amber-100 hover:bg-amber-700/50"
+                    }`}
+                  >
+                    <Users className="w-4 h-4 inline mr-2" />
+                    <span className="hidden sm:inline">Friends' Posts</span>
+                    <span className="sm:hidden">Friends</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("community")}
+                    className={`px-4 sm:px-6 py-3 rounded-lg font-serif transition-all duration-300 ${
+                      activeTab === "community"
+                        ? "bg-amber-100 text-amber-800 shadow-md scale-105"
+                        : "text-amber-100 hover:bg-amber-700/50"
+                    }`}
+                  >
+                    <Users className="w-4 h-4 inline mr-2" />
+                    <span className="hidden sm:inline">Community</span>
+                    <span className="sm:hidden">Community</span>
+                  </button>
                 </div>
+              </div>
+            </FadeIn>
 
-                <div className="space-y-6">
-                  {friendsPosts.map((post, index) => (
-                    <FadeIn key={`${post.author}-${index}`} delay={700 + index * 100}>
-                      <div className="bg-blue-50 p-4 sm:p-6 rounded-lg border border-blue-200 hover:shadow-md transition-all duration-300 group">
-                        <div className="flex items-start mb-4">
-                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-400 to-blue-500 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0 shadow-md relative">
-                            <span className="font-serif font-bold text-white text-sm sm:text-base">
-                              {post.initials}
-                            </span>
-                            {/* Friend indicator */}
-                            <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
-                              <Heart className="w-2 h-2 text-white" />
-                            </div>
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2 gap-1">
-                              <h4 className="font-serif font-bold text-blue-800">{post.author}</h4>
-                              <span className="text-sm text-blue-600">{post.time}</span>
-                            </div>
-                            <p className="text-blue-700 font-serif mb-4 text-sm sm:text-base">{post.content}</p>
-                            <div className="flex items-center space-x-4 sm:space-x-6 text-sm">
-                              <button className="flex items-center text-blue-600 hover:text-blue-800 transition-colors group-hover:scale-105">
-                                <Heart className="w-4 h-4 mr-1" />
-                                {post.likes} likes
-                              </button>
-                              <button className="flex items-center text-blue-600 hover:text-blue-800 transition-colors group-hover:scale-105">
-                                <MessageSquare className="w-4 h-4 mr-1" />
-                                {post.comments} comments
-                              </button>
-                              <button className="text-blue-600 hover:text-blue-800 transition-colors text-sm font-serif">
-                                Write to {post.author.split(" ")[0]}
-                              </button>
-                            </div>
-                          </div>
-                        </div>
+            {/* Enhanced Content */}
+            <FadeIn delay={600}>
+              <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl p-6 sm:p-8 min-h-96 border border-amber-200/50">
+                {activeTab === "friends" && (
+                  <div>
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                      <h2 className="text-xl sm:text-2xl font-serif text-amber-800">Friends' Posts</h2>
+                      <div className="text-sm text-amber-600 font-serif italic">
+                        See what your friends are sharing about their letter-writing journey
                       </div>
-                    </FadeIn>
-                  ))}
-                </div>
+                    </div>
 
-                {/* Empty state if no friends */}
-                {friendsPosts.length === 0 && (
-                  <div className="text-center py-12">
-                    <Users className="w-16 h-16 text-amber-400 mx-auto mb-4 opacity-50" />
-                    <h3 className="text-lg font-serif text-amber-700 mb-2">No posts from friends yet</h3>
-                    <p className="text-amber-600 font-serif italic">
-                      Add friends to see their letter-writing stories and experiences here
-                    </p>
+                    <div className="space-y-6">
+                      {friendsPosts.map((post, index) => (
+                        <FadeIn key={`${post.author}-${index}`} delay={700 + index * 100}>
+                          <div className="bg-blue-50 p-4 sm:p-6 rounded-lg border border-blue-200 hover:shadow-md transition-all duration-300 group">
+                            <div className="flex items-start mb-4">
+                              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-400 to-blue-500 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0 shadow-md relative">
+                                <span className="font-serif font-bold text-white text-sm sm:text-base">
+                                  {post.initials}
+                                </span>
+                                {/* Friend indicator */}
+                                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
+                                  <Heart className="w-2 h-2 text-white" />
+                                </div>
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2 gap-1">
+                                  <h4 className="font-serif font-bold text-blue-800">{post.author}</h4>
+                                  <span className="text-sm text-blue-600">{post.time}</span>
+                                </div>
+                                <p className="text-blue-700 font-serif mb-4 text-sm sm:text-base">{post.content}</p>
+                                <div className="flex items-center space-x-4 sm:space-x-6 text-sm">
+                                  <button className="flex items-center text-blue-600 hover:text-blue-800 transition-colors group-hover:scale-105">
+                                    <Heart className="w-4 h-4 mr-1" />
+                                    {post.likes} likes
+                                  </button>
+                                  <button className="flex items-center text-blue-600 hover:text-blue-800 transition-colors group-hover:scale-105">
+                                    <MessageSquare className="w-4 h-4 mr-1" />
+                                    {post.comments} comments
+                                  </button>
+                                  <button className="text-blue-600 hover:text-blue-800 transition-colors text-sm font-serif">
+                                    Write to {post.author.split(" ")[0]}
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </FadeIn>
+                      ))}
+                    </div>
+
+                    {/* Empty state if no friends */}
+                    {friendsPosts.length === 0 && (
+                      <div className="text-center py-12">
+                        <Users className="w-16 h-16 text-amber-400 mx-auto mb-4 opacity-50" />
+                        <h3 className="text-lg font-serif text-amber-700 mb-2">No posts from friends yet</h3>
+                        <p className="text-amber-600 font-serif italic">
+                          Add friends to see their letter-writing stories and experiences here
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {activeTab === "community" && (
+                  <div>
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                      <h2 className="text-xl sm:text-2xl font-serif text-amber-800">Community Stories</h2>
+                      <Button
+                        onClick={() => setShowStoryForm(true)}
+                        className="bg-amber-700 hover:bg-amber-600 text-white btn-hover-lift w-full sm:w-auto"
+                      >
+                        <Pin className="w-4 h-4 mr-2" />
+                        Share Your Story
+                      </Button>
+                    </div>
+
+                    <div className="space-y-6">
+                      {communityPosts.map((post, index) => (
+                        <FadeIn key={`${post.author}-${index}`} delay={700 + index * 100}>
+                          <div className="bg-amber-50 p-4 sm:p-6 rounded-lg border border-amber-200 hover:shadow-md transition-all duration-300 group">
+                            <div className="flex items-start mb-4">
+                              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-amber-400 to-amber-500 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0 shadow-md">
+                                <span className="font-serif font-bold text-white text-sm sm:text-base">
+                                  {post.initials}
+                                </span>
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2 gap-1">
+                                  <h4 className="font-serif font-bold text-amber-800">{post.author}</h4>
+                                  <span className="text-sm text-amber-600">{post.time}</span>
+                                </div>
+                                <p className="text-amber-700 font-serif mb-4 text-sm sm:text-base">{post.content}</p>
+                                <div className="flex items-center space-x-4 sm:space-x-6 text-sm">
+                                  <button className="flex items-center text-amber-600 hover:text-amber-800 transition-colors group-hover:scale-105">
+                                    <Heart className="w-4 h-4 mr-1" />
+                                    {post.likes} likes
+                                  </button>
+                                  <button className="flex items-center text-amber-600 hover:text-amber-800 transition-colors group-hover:scale-105">
+                                    <MessageSquare className="w-4 h-4 mr-1" />
+                                    {post.comments} comments
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </FadeIn>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
-            )}
-
-            {activeTab === "community" && (
-              <div>
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-                  <h2 className="text-xl sm:text-2xl font-serif text-amber-800">Community Stories</h2>
-                  <Button
-                    onClick={() => setShowStoryForm(true)}
-                    className="bg-amber-700 hover:bg-amber-600 text-white btn-hover-lift w-full sm:w-auto"
-                  >
-                    <Pin className="w-4 h-4 mr-2" />
-                    Share Your Story
-                  </Button>
-                </div>
-
-                <div className="space-y-6">
-                  {communityPosts.map((post, index) => (
-                    <FadeIn key={`${post.author}-${index}`} delay={700 + index * 100}>
-                      <div className="bg-amber-50 p-4 sm:p-6 rounded-lg border border-amber-200 hover:shadow-md transition-all duration-300 group">
-                        <div className="flex items-start mb-4">
-                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-amber-400 to-amber-500 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0 shadow-md">
-                            <span className="font-serif font-bold text-white text-sm sm:text-base">
-                              {post.initials}
-                            </span>
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2 gap-1">
-                              <h4 className="font-serif font-bold text-amber-800">{post.author}</h4>
-                              <span className="text-sm text-amber-600">{post.time}</span>
-                            </div>
-                            <p className="text-amber-700 font-serif mb-4 text-sm sm:text-base">{post.content}</p>
-                            <div className="flex items-center space-x-4 sm:space-x-6 text-sm">
-                              <button className="flex items-center text-amber-600 hover:text-amber-800 transition-colors group-hover:scale-105">
-                                <Heart className="w-4 h-4 mr-1" />
-                                {post.likes} likes
-                              </button>
-                              <button className="flex items-center text-amber-600 hover:text-amber-800 transition-colors group-hover:scale-105">
-                                <MessageSquare className="w-4 h-4 mr-1" />
-                                {post.comments} comments
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </FadeIn>
-                  ))}
-                </div>
-              </div>
-            )}
+            </FadeIn>
           </div>
-        </FadeIn>
+        </div>
       </div>
 
       {/* Enhanced Share Story Modal */}

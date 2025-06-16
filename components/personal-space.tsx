@@ -103,16 +103,40 @@ export const PersonalSpace = React.memo<PersonalSpaceProps>(({ user, onNavigate 
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-100 via-orange-50 to-amber-200 p-4 sm:p-6">
-      {/* Back Button */}
-      <FadeIn>
-        <Button onClick={() => onNavigate("main")} className="mb-6 bg-amber-700 hover:bg-amber-600 text-amber-100">
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Hall
-        </Button>
-      </FadeIn>
+    <div className="min-h-screen bg-gradient-to-br from-amber-100 via-orange-50 to-amber-200 flex flex-col">
+      {/* Fixed Header */}
+      <div className="fixed top-0 left-0 right-0 z-30 bg-gradient-to-r from-amber-50/95 via-orange-50/95 to-amber-100/95 backdrop-blur-md border-b border-amber-200/50 shadow-lg">
+        <div className="px-6 py-3">
+          <FadeIn delay={300}>
+            <div className="flex items-center justify-center relative max-w-4xl mx-auto">
+              {/* Left side - Back Button */}
+              <div className="absolute left-0">
+                <Button onClick={() => onNavigate("main")} className="bg-amber-700 hover:bg-amber-600 text-amber-100">
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back to Hall
+                </Button>
+              </div>
+              
+              {/* Center - Title */}
+              <div className="flex items-center">
+                <Heart className="w-6 h-6 text-amber-600 mr-2 animate-pulse" />
+                <div>
+                  <h1 className="text-lg font-serif text-amber-800 font-bold leading-tight">Your Personal Space</h1>
+                  <p className="text-xs text-amber-600 font-serif italic leading-tight">
+                    Memory book, storage, and profile
+                  </p>
+                </div>
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </div>
 
-      <div className="max-w-6xl mx-auto">
+      {/* Scrollable Content Area */}
+      <div className="flex-1 overflow-y-auto pt-16">
+        <div className="p-4 sm:p-6">
+          <div className="max-w-6xl mx-auto">
+
         <FadeIn delay={200}>
           <h1 className="text-2xl sm:text-3xl font-serif text-amber-800 mb-8 text-center">Your Personal Space</h1>
         </FadeIn>
@@ -903,4 +927,4 @@ export const PersonalSpace = React.memo<PersonalSpaceProps>(({ user, onNavigate 
   )
 })
 
-PersonalSpace.displayName = "PersonalSpace"
+PersonalSpace.displayName = "PersonalSpace";

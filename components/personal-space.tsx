@@ -163,7 +163,7 @@ export const PersonalSpace = React.memo<PersonalSpaceProps>(({ user, onNavigate 
                             birthday: "March 15",
                             avatar: "M",
                             color: "bg-red-500",
-                            description: "My wonderful mother"
+                            description: "My wonderful mother",
                           },
                           {
                             name: "Sarah Johnson",
@@ -171,7 +171,7 @@ export const PersonalSpace = React.memo<PersonalSpaceProps>(({ user, onNavigate 
                             birthday: "July 22",
                             avatar: "S",
                             color: "bg-blue-500",
-                            description: "My best friend since childhood"
+                            description: "My best friend since childhood",
                           },
                           {
                             name: "John Smith",
@@ -179,7 +179,7 @@ export const PersonalSpace = React.memo<PersonalSpaceProps>(({ user, onNavigate 
                             birthday: "December 10",
                             avatar: "J",
                             color: "bg-green-500",
-                            description: "My loving partner"
+                            description: "My loving partner",
                           },
                           {
                             name: "Grandma",
@@ -187,7 +187,7 @@ export const PersonalSpace = React.memo<PersonalSpaceProps>(({ user, onNavigate 
                             birthday: "September 5",
                             avatar: "G",
                             color: "bg-purple-500",
-                            description: "My sweet grandma"
+                            description: "My sweet grandma",
                           },
                         ].map((person, index) => (
                           <FadeIn key={person.name} delay={1000 + index * 100}>
@@ -538,7 +538,9 @@ export const PersonalSpace = React.memo<PersonalSpaceProps>(({ user, onNavigate 
               {/* Modal Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-amber-50 to-orange-50">
                 <div className="flex items-center space-x-4">
-                  <div className={`w-16 h-16 ${selectedPerson.color} rounded-full flex items-center justify-center shadow-lg`}>
+                  <div
+                    className={`w-16 h-16 ${selectedPerson.color} rounded-full flex items-center justify-center shadow-lg`}
+                  >
                     <span className="font-serif font-bold text-white text-2xl">{selectedPerson.avatar}</span>
                   </div>
                   <div>
@@ -563,7 +565,7 @@ export const PersonalSpace = React.memo<PersonalSpaceProps>(({ user, onNavigate 
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="font-serif text-amber-800 font-bold">Là ai?</h3>
                     <Button
-                      onClick={() => editingDescription ? handleSaveDescription() : setEditingDescription(true)}
+                      onClick={() => (editingDescription ? handleSaveDescription() : setEditingDescription(true))}
                       className="bg-amber-600 hover:bg-amber-700 text-white text-sm px-3 py-1"
                     >
                       {editingDescription ? "Save" : "Edit"}
@@ -600,15 +602,18 @@ export const PersonalSpace = React.memo<PersonalSpaceProps>(({ user, onNavigate 
                       {
                         title: "Sinh nhật",
                         date: selectedPerson.birthday,
-                        description: `Đây là ngày sinh nhật của ${selectedPerson.name}, một ngày rất đặc biệt để tôi thể hiện tình yêu thương.`
+                        description: `Đây là ngày sinh nhật của ${selectedPerson.name}, một ngày rất đặc biệt để tôi thể hiện tình yêu thương.`,
                       },
                       {
                         title: "Ngày kỷ niệm",
                         date: "January 20",
-                        description: `Ngày đầu tiên tôi gặp ${selectedPerson.name}, một kỷ niệm không thể nào quên.`
-                      }
+                        description: `Ngày đầu tiên tôi gặp ${selectedPerson.name}, một kỷ niệm không thể nào quên.`,
+                      },
                     ].map((specialDate, index) => (
-                      <div key={index} className="bg-white p-4 rounded-lg border border-amber-200 hover:shadow-sm transition-shadow">
+                      <div
+                        key={index}
+                        className="bg-white p-4 rounded-lg border border-amber-200 hover:shadow-sm transition-shadow"
+                      >
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex-1">
                             <h4 className="font-serif text-amber-800 font-bold flex items-center">
@@ -685,29 +690,30 @@ export const PersonalSpace = React.memo<PersonalSpaceProps>(({ user, onNavigate 
                           </Button>
                         </div>
                       </div>
-                    )}
-                  </div>
-
-                  {/* Quick Actions */}
-                  <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
-                    <h4 className="font-serif text-amber-800 font-bold mb-3">Hành động nhanh</h4>
-                    <div className="flex flex-wrap gap-2">
-                      <Button className="bg-blue-600 hover:bg-blue-700 text-white text-sm">
-                        📝 Viết thư cho {selectedPerson.name}
-                      </Button>
-                      <Button className="bg-purple-600 hover:bg-purple-700 text-white text-sm">
-                        📞 Đặt lịch nhắc nhở
-                      </Button>
-                      <Button className="bg-orange-600 hover:bg-orange-700 text-white text-sm">
-                        🎁 Lên kế hoạch quà tặng
-                      </Button>
                     </div>
+                  )}
+                </div>
+
+                {/* Quick Actions */}
+                <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
+                  <h4 className="font-serif text-amber-800 font-bold mb-3">Hành động nhanh</h4>
+                  <div className="flex flex-wrap gap-2">
+                    <Button className="bg-blue-600 hover:bg-blue-700 text-white text-sm">
+                      📝 Viết thư cho {selectedPerson.name}
+                    </Button>
+                    <Button className="bg-purple-600 hover:bg-purple-700 text-white text-sm">
+                      📞 Đặt lịch nhắc nhở
+                    </Button>
+                    <Button className="bg-orange-600 hover:bg-orange-700 text-white text-sm">
+                      🎁 Lên kế hoạch quà tặng
+                    </Button>
                   </div>
                 </div>
               </div>
-            </FadeIn>
-          </div>
-        )}
+            </div>
+          </FadeIn>
+        </div>
+      )}
     </div>
   )
 })

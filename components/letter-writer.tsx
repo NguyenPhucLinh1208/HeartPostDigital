@@ -100,45 +100,56 @@ export function LetterWriter({ user, onNavigate }: LetterWriterProps) {
     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-amber-200 p-6">
       {/* Header */}
       <div className="max-w-4xl mx-auto mb-8">
-        <div className="flex items-center justify-between mb-6">
-          <Button onClick={() => onNavigate("personal")} className="bg-amber-700 hover:bg-amber-600 text-white">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Personal Space
-          </Button>
-          <h1 className="text-3xl font-serif text-amber-800 font-bold">Letter Writing Studio</h1>
-          <div className="w-32"></div> {/* Spacer */}
-        </div>
+        {/* Mobile responsive adjustments */}
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4">
+            <Button onClick={() => onNavigate("personal")} className="bg-amber-700 hover:bg-amber-600 text-white">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Personal Space
+            </Button>
+            <h1 className="text-2xl sm:text-3xl font-serif text-amber-800 font-bold text-center">
+              Letter Writing Studio
+            </h1>
+            <div className="w-32 hidden sm:block"></div> {/* Spacer for desktop */}
+          </div>
 
-        {/* Progress Steps */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-          <div className="flex items-center justify-between">
-            {steps.map((step, index) => (
-              <div key={step.id} className="flex items-center">
-                <div
-                  className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl transition-all duration-300 ${
-                    currentStep === step.id
-                      ? "bg-amber-600 text-white scale-110"
-                      : getCurrentStepIndex() > index
-                        ? "bg-green-500 text-white"
-                        : "bg-gray-200 text-gray-500"
-                  }`}
-                >
-                  {getCurrentStepIndex() > index ? "✓" : step.icon}
+          {/* Progress Steps - Fixed responsive layout */}
+          <div className="bg-white rounded-lg shadow-lg p-4 mb-8 overflow-x-auto">
+            <div className="flex items-center justify-between min-w-max px-4">
+              {steps.map((step, index) => (
+                <div key={step.id} className="flex items-center flex-shrink-0">
+                  <div className="flex flex-col items-center">
+                    <div
+                      className={`w-10 h-10 rounded-full flex items-center justify-center text-lg transition-all duration-300 ${
+                        currentStep === step.id
+                          ? "bg-amber-600 text-white scale-110 shadow-lg"
+                          : getCurrentStepIndex() > index
+                            ? "bg-green-500 text-white"
+                            : "bg-gray-200 text-gray-500"
+                      }`}
+                    >
+                      {getCurrentStepIndex() > index ? "✓" : step.icon}
+                    </div>
+                    <div className="mt-2 text-center min-w-0">
+                      <p
+                        className={`font-serif text-xs ${
+                          currentStep === step.id ? "text-amber-800 font-bold" : "text-gray-600"
+                        } truncate max-w-20`}
+                      >
+                        {step.title}
+                      </p>
+                    </div>
+                  </div>
+                  {index < steps.length - 1 && (
+                    <div
+                      className={`w-12 h-1 mx-3 rounded transition-colors duration-300 ${
+                        getCurrentStepIndex() > index ? "bg-green-500" : "bg-gray-200"
+                      }`}
+                    ></div>
+                  )}
                 </div>
-                <div className="ml-3 text-center">
-                  <p
-                    className={`font-serif text-sm ${currentStep === step.id ? "text-amber-800 font-bold" : "text-gray-600"}`}
-                  >
-                    {step.title}
-                  </p>
-                </div>
-                {index < steps.length - 1 && (
-                  <div
-                    className={`w-16 h-1 mx-4 rounded ${getCurrentStepIndex() > index ? "bg-green-500" : "bg-gray-200"}`}
-                  ></div>
-                )}
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from "react"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Book, Archive, User, PenTool, Heart } from "lucide-react"
+import { ArrowLeft, Book, Archive, User, PenTool, Heart, Calendar, Bell } from "lucide-react"
 import { LetterWriter } from "./letter-writer"
 import { FadeIn } from "@/components/ui/fade-in"
 
@@ -105,20 +105,199 @@ export const PersonalSpace = React.memo<PersonalSpaceProps>(({ user, onNavigate 
             {activeSection === "memory" && (
               <div>
                 <h2 className="text-xl sm:text-2xl font-serif text-amber-800 mb-6">Memory Book</h2>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <div className="bg-amber-50 p-6 rounded-lg border border-amber-200 hover:shadow-md transition-shadow">
-                    <h3 className="font-serif text-amber-800 mb-4 text-lg">Special People</h3>
-                    <p className="text-amber-700 mb-4">
-                      Keep track of important people in your life and your memories with them.
-                    </p>
-                    <Button className="bg-amber-700 hover:bg-amber-600 text-white btn-hover-lift">Add Person</Button>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  {/* Special People Section */}
+                  <div className="space-y-4">
+                    <div className="bg-amber-50 p-6 rounded-lg border border-amber-200 hover:shadow-md transition-shadow">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="font-serif text-amber-800 text-lg flex items-center">
+                          <Heart className="w-5 h-5 mr-2 text-red-500" />
+                          Special People
+                        </h3>
+                        <Button className="bg-amber-700 hover:bg-amber-600 text-white text-sm px-3 py-1">
+                          Add Person
+                        </Button>
+                      </div>
+                      <p className="text-amber-700 mb-4 text-sm">
+                        Keep track of important people in your life and their special moments.
+                      </p>
+
+                      {/* People List */}
+                      <div className="space-y-3">
+                        {[
+                          {
+                            name: "Mom",
+                            relationship: "Family",
+                            birthday: "March 15",
+                            avatar: "M",
+                            color: "bg-red-500",
+                          },
+                          {
+                            name: "Sarah Johnson",
+                            relationship: "Best Friend",
+                            birthday: "July 22",
+                            avatar: "S",
+                            color: "bg-blue-500",
+                          },
+                          {
+                            name: "John Smith",
+                            relationship: "Partner",
+                            birthday: "December 10",
+                            avatar: "J",
+                            color: "bg-green-500",
+                          },
+                          {
+                            name: "Grandma",
+                            relationship: "Family",
+                            birthday: "September 5",
+                            avatar: "G",
+                            color: "bg-purple-500",
+                          },
+                        ].map((person, index) => (
+                          <FadeIn key={person.name} delay={1000 + index * 100}>
+                            <div className="bg-white p-4 rounded-lg border border-amber-200 hover:bg-amber-25 hover:shadow-sm transition-all duration-300 cursor-pointer group">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center space-x-3">
+                                  <div
+                                    className={`w-10 h-10 ${person.color} rounded-full flex items-center justify-center shadow-md group-hover:scale-110 transition-transform`}
+                                  >
+                                    <span className="font-serif font-bold text-white">{person.avatar}</span>
+                                  </div>
+                                  <div>
+                                    <h4 className="font-serif text-amber-800 font-bold">{person.name}</h4>
+                                    <p className="text-xs text-amber-600">{person.relationship}</p>
+                                  </div>
+                                </div>
+                                <div className="text-right">
+                                  <p className="text-xs text-amber-700 font-serif">🎂 {person.birthday}</p>
+                                  <Button className="bg-amber-600 hover:bg-amber-700 text-white text-xs px-2 py-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    View Dates
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
+                          </FadeIn>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                  <div className="bg-amber-50 p-6 rounded-lg border border-amber-200 hover:shadow-md transition-shadow">
-                    <h3 className="font-serif text-amber-800 mb-4 text-lg">Important Dates</h3>
-                    <p className="text-amber-700 mb-4">
-                      Remember birthdays, anniversaries, and other special occasions.
-                    </p>
-                    <Button className="bg-amber-700 hover:bg-amber-600 text-white btn-hover-lift">Add Date</Button>
+
+                  {/* Calendar Section */}
+                  <div className="space-y-4">
+                    <div className="bg-white p-6 rounded-lg border border-amber-200 shadow-md">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="font-serif text-amber-800 text-lg flex items-center">
+                          <Calendar className="w-5 h-5 mr-2 text-amber-600" />
+                          {new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+                        </h3>
+                        <div className="flex space-x-2">
+                          <Button variant="ghost" size="sm" className="text-amber-600 hover:bg-amber-50">
+                            ‹
+                          </Button>
+                          <Button variant="ghost" size="sm" className="text-amber-600 hover:bg-amber-50">
+                            ›
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Calendar Grid */}
+                      <div className="grid grid-cols-7 gap-1 mb-2">
+                        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+                          <div key={day} className="text-center text-xs font-serif text-amber-600 py-2 font-bold">
+                            {day}
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="grid grid-cols-7 gap-1">
+                        {(() => {
+                          const today = new Date()
+                          const currentMonth = today.getMonth()
+                          const currentYear = today.getFullYear()
+                          const firstDay = new Date(currentYear, currentMonth, 1)
+                          const lastDay = new Date(currentYear, currentMonth + 1, 0)
+                          const startDate = new Date(firstDay)
+                          startDate.setDate(startDate.getDate() - firstDay.getDay())
+
+                          const days = []
+                          const specialDates = [15, 22, 10, 5] // Mock special dates
+
+                          for (let i = 0; i < 42; i++) {
+                            const date = new Date(startDate)
+                            date.setDate(startDate.getDate() + i)
+                            const isCurrentMonth = date.getMonth() === currentMonth
+                            const isToday = date.toDateString() === today.toDateString()
+                            const isSpecial = isCurrentMonth && specialDates.includes(date.getDate())
+
+                            days.push(
+                              <div
+                                key={i}
+                                className={`
+                                  aspect-square flex items-center justify-center text-sm font-serif cursor-pointer transition-all duration-200 rounded
+                                  ${isCurrentMonth ? "text-amber-800" : "text-gray-300"}
+                                  ${isToday ? "bg-amber-600 text-white font-bold shadow-md" : "hover:bg-amber-50"}
+                                  ${isSpecial && !isToday ? "bg-red-100 text-red-700 font-bold" : ""}
+                                `}
+                              >
+                                {date.getDate()}
+                                {isSpecial && !isToday && (
+                                  <div className="absolute w-1 h-1 bg-red-500 rounded-full mt-4"></div>
+                                )}
+                              </div>,
+                            )
+                          }
+                          return days
+                        })()}
+                      </div>
+
+                      {/* Calendar Legend */}
+                      <div className="mt-4 pt-4 border-t border-amber-200">
+                        <div className="flex items-center justify-between text-xs">
+                          <div className="flex items-center space-x-4">
+                            <div className="flex items-center">
+                              <div className="w-3 h-3 bg-amber-600 rounded mr-2"></div>
+                              <span className="text-amber-700 font-serif">Today</span>
+                            </div>
+                            <div className="flex items-center">
+                              <div className="w-3 h-3 bg-red-100 border border-red-300 rounded mr-2"></div>
+                              <span className="text-amber-700 font-serif">Special Date</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Upcoming Events */}
+                    <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
+                      <h4 className="font-serif text-amber-800 font-bold mb-3 flex items-center">
+                        <Bell className="w-4 h-4 mr-2" />
+                        Upcoming Events
+                      </h4>
+                      <div className="space-y-2">
+                        {[
+                          { name: "Mom's Birthday", date: "March 15", days: 12, person: "Mom" },
+                          { name: "Sarah's Birthday", date: "July 22", days: 45, person: "Sarah" },
+                        ].map((event, index) => (
+                          <div
+                            key={index}
+                            className="bg-white p-3 rounded border border-amber-200 hover:shadow-sm transition-shadow"
+                          >
+                            <div className="flex justify-between items-center">
+                              <div>
+                                <p className="font-serif text-amber-800 font-bold text-sm">{event.name}</p>
+                                <p className="text-xs text-amber-600">{event.date}</p>
+                              </div>
+                              <div className="text-right">
+                                <p className="text-xs text-amber-700">{event.days} days</p>
+                                <Button className="bg-amber-600 hover:bg-amber-700 text-white text-xs px-2 py-1 mt-1">
+                                  Remind
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

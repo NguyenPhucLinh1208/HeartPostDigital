@@ -1,21 +1,24 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useEffect, useCallback } from "react"
 
 export function useLocalStorage<T>(key: string, initialValue: T) {
-  const [storedValue, setStoredValue] = useState<T>(() => {
-    if (typeof window === "undefined") {
-      return initialValue
-    }
+  // 1. Khởi tạo state với giá trị ban đầu.
+  //    Điều này đảm bảo server và client render giống nhau lần đầu.
+  const [storedValue, setStoredValue] = useState<T>(initialValue)
 
+  // 2. Sử dụng useEffect để đọc từ localStorage chỉ ở phía client.
+  useEffect(() => {
     try {
       const item = window.localStorage.getItem(key)
-      return item ? JSON.parse(item) : initialValue
+      // Chỉ cập nhật state nếu có giá trị trong localStorage.
+      if (item) {
+        setStoredValue(JSON.parse(item))
+      }
     } catch (error) {
       console.warn(`Error reading localStorage key "${key}":`, error)
-      return initialValue
     }
-  })
+  }, [key]) // Chỉ chạy một lần sau khi component được mount.
 
   const setValue = useCallback(
     (value: T | ((val: T) => T)) => {

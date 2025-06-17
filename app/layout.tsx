@@ -2,9 +2,12 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.dev',
+  title: 'HeartPost',
+  description: 'HeartPost - Trải nghiệm thư và thiệp điện tử chân thật như cầm trên tay.',
+  generator: 'HeartPost',
+  icons: {
+    icon: '/logo.png',
+  },
 }
 
 export default function RootLayout({
@@ -13,7 +16,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    // Thêm suppressHydrationWarning={true} vào đây
+    <html lang="en" suppressHydrationWarning={true}>
       <body>{children}</body>
     </html>
   )

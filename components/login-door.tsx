@@ -1,21 +1,15 @@
 "use client"
 
-import React, { useState, useCallback, useEffect } from "react"
+import React, { useState, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { FadeIn } from "@/components/ui/fade-in"
 import { useAnimation } from "@/hooks/useAnimation"
 import { Key } from "lucide-react"
+import Image from "next/image"
 
 interface LoginDoorProps {
   onLogin: (username: string) => void
-}
-
-interface ParticleStyle {
-  left: string
-  top: string
-  animationDelay: string
-  animationDuration: string
 }
 
 export const LoginDoor = React.memo<LoginDoorProps>(({ onLogin }) => {
@@ -24,22 +18,6 @@ export const LoginDoor = React.memo<LoginDoorProps>(({ onLogin }) => {
   const [errors, setErrors] = useState<{ username?: string; password?: string }>({})
   const [isKeyHovered, setIsKeyHovered] = useState(false)
   const { isAnimating, animate } = useAnimation(2000)
-
-  // State to hold particle styles, generated only on the client
-  const [particles, setParticles] = useState<ParticleStyle[]>([])
-
-  useEffect(() => {
-    // This code runs only on the client, after the initial render
-    const generateParticles = () => {
-      return [...Array(8)].map(() => ({
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 100}%`,
-        animationDelay: `${Math.random() * 3}s`,
-        animationDuration: `${2 + Math.random() * 2}s`,
-      }))
-    }
-    setParticles(generateParticles())
-  }, []) // Empty dependency array ensures this runs only once on mount
 
   const validateForm = useCallback(() => {
     const newErrors: { username?: string; password?: string } = {}
@@ -98,6 +76,17 @@ export const LoginDoor = React.memo<LoginDoorProps>(({ onLogin }) => {
         <div className="absolute top-1/3 left-1/4 w-24 h-24 bg-amber-400/15 rounded-full blur-xl animate-pulse animation-delay-500"></div>
         <div className="absolute bottom-1/4 right-1/3 w-36 h-36 bg-yellow-400/20 rounded-full blur-2xl animate-pulse animation-delay-1500"></div>
 
+        {/* Floating hearts */}
+        <div className="absolute top-16 left-16 text-amber-400/30 text-2xl animate-bounce-gentle">柱</div>
+        <div className="absolute top-32 right-24 text-orange-400/25 text-xl animate-bounce-gentle animation-delay-1000">
+          笨会ｸ�        </div>
+        <div className="absolute bottom-24 left-32 text-amber-500/20 text-lg animate-bounce-gentle animation-delay-500">
+          喋
+        </div>
+        <div className="absolute bottom-16 right-16 text-yellow-500/30 text-2xl animate-bounce-gentle animation-delay-1500">
+          動
+        </div>
+
         {/* Subtle pattern overlay */}
         <div className="absolute inset-0 opacity-5">
           <div
@@ -135,12 +124,14 @@ export const LoginDoor = React.memo<LoginDoorProps>(({ onLogin }) => {
               {/* HeartPost Sign - moved up more */}
               <FadeIn delay={600}>
                 <div className="absolute top-8 left-1/2 transform -translate-x-1/2">
-                  <div className="bg-gradient-to-b from-yellow-500 to-yellow-600 px-8 py-4 rounded-xl shadow-lg border-2 border-yellow-700 relative">
-                    <div className="absolute inset-0 bg-yellow-400/20 rounded-xl blur animate-pulse"></div>
-                    <h1 className="text-amber-900 font-serif text-2xl font-bold tracking-wider relative z-10">
-                      HeartPost
-                    </h1>
-                  </div>
+                  {/* Thay thế h1 bằng Image */}
+                  <Image
+                    src="/logo.png"
+                    alt="HeartPost Logo"
+                    width={200}
+                    height={80}
+                    priority
+                  />
                 </div>
               </FadeIn>
 
@@ -229,10 +220,19 @@ export const LoginDoor = React.memo<LoginDoorProps>(({ onLogin }) => {
         </div>
       </FadeIn>
 
-      {/* Floating particles animation - Renders only on client */}
+      {/* Floating particles animation */}
       <div className="absolute inset-0 pointer-events-none">
-        {particles.map((style, i) => (
-          <div key={i} className="absolute w-2 h-2 bg-yellow-400/30 rounded-full animate-pulse" style={style}></div>
+        {[...Array(8)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-2 h-2 bg-yellow-400/30 rounded-full animate-pulse"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 3}s`,
+              animationDuration: `${2 + Math.random() * 2}s`,
+            }}
+          ></div>
         ))}
       </div>
     </div>

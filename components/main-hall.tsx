@@ -13,19 +13,22 @@ interface MainHallProps {
 }
 
 export const MainHall = React.memo<MainHallProps>(({ user, onNavigate, onLogout }) => {
-  const [currentTime, setCurrentTime] = useState(new Date())
+  // Khởi tạo là null để tránh lỗi hydration
+  const [currentTime, setCurrentTime] = useState<Date | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [hoveredNavItem, setHoveredNavItem] = useState<string | null>(null)
   const [showNotifications, setShowNotifications] = useState(false)
   const { animate } = useAnimation()
 
-  // Optimized time update
+  // Chỉ chạy ở client để cập nhật thời gian
   useEffect(() => {
+    setCurrentTime(new Date()) // Set thời gian lần đầu
     const timer = setInterval(() => setCurrentTime(new Date()), 1000)
     return () => clearInterval(timer)
   }, [])
 
   const timeGreeting = useMemo(() => {
+    if (!currentTime) return "Welcome" // Trả về giá trị tĩnh khi currentTime là null
     const hour = currentTime.getHours()
     if (hour < 12) return "Good Morning"
     if (hour < 18) return "Good Afternoon"
@@ -40,7 +43,8 @@ export const MainHall = React.memo<MainHallProps>(({ user, onNavigate, onLogout 
       "Letters are the language of love",
       "In every envelope lies a piece of someone's heart",
     ]
-    return quotes[Math.floor(Math.random() * quotes.length)]
+    // Sử dụng index cố định hoặc logic không phụ thuộc Math.random() trong render đầu tiên
+    return quotes[0]
   }, [])
 
   const navigationItems = useMemo(
@@ -388,22 +392,24 @@ export const MainHall = React.memo<MainHallProps>(({ user, onNavigate, onLogout 
                     </h2>
                     <p className="text-lg text-amber-700 font-serif italic mb-6">"{motivationalQuote}"</p>
 
-                    {/* Enhanced Time Display */}
-                    <div className="bg-gradient-to-r from-amber-800 to-amber-900 text-white p-6 rounded-xl shadow-lg inline-block relative overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-r from-amber-700/20 to-amber-600/20 animate-pulse"></div>
-                      <div className="flex items-center justify-center mb-2 relative z-10">
-                        <Clock className="w-6 h-6 mr-3" />
-                        <span className="font-mono text-2xl">{currentTime.toLocaleTimeString()}</span>
+                    {/* Enhanced Time Display: Hiển thị khi thời gian đã sẵn sàng */}
+                    {currentTime && (
+                      <div className="bg-gradient-to-r from-amber-800 to-amber-900 text-white p-6 rounded-xl shadow-lg inline-block relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-r from-amber-700/20 to-amber-600/20 animate-pulse"></div>
+                        <div className="flex items-center justify-center mb-2 relative z-10">
+                          <Clock className="w-6 h-6 mr-3" />
+                          <span className="font-mono text-2xl">{currentTime.toLocaleTimeString()}</span>
+                        </div>
+                        <p className="font-serif text-lg relative z-10">
+                          {currentTime.toLocaleDateString("en-US", {
+                            weekday: "long",
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })}
+                        </p>
                       </div>
-                      <p className="font-serif text-lg relative z-10">
-                        {currentTime.toLocaleDateString("en-US", {
-                          weekday: "long",
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })}
-                      </p>
-                    </div>
+                    )}
                   </div>
                 </div>
               </FadeIn>
